@@ -51,8 +51,20 @@
   "scripts": {
     "start": "craco start",
     "build": "craco build",
+    "git:add": "git add .",
+    "type-check": "tsc --pretty --noEmit",
     "test": "jest",
-    "prettier": "prettier --write ."
+    "test-all": "npm run lint && npm run type-check && npm run test",
+    "lint": "eslint . --fix",
+    "format": "prettier --write \"**/*.{js,jsx,css,ts,tsx}\"",
+    "precommit": "run-s lint git:add",
+    "prepush": "run-s lint type-check git:add"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run precommit",
+      "pre-push": "npm run prepush"
+    }
   },
   "browserslist": {
     "production": [
