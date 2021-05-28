@@ -26,5 +26,13 @@ module.exports = {
         argsIgnorePattern: '^_',
       },
     ],
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        devDependencies: false,
+        optionalDependencies: false,
+        peerDependencies: false,
+      },
+    ],
   },
 };
