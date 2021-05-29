@@ -16,12 +16,17 @@ module.exports = {
       lg: '1024px',
       xl: '1280px',
     },
+    minHeight: {
+      12: '3rem',
+      screen: '100vh',
+    },
     extend: {
       colors: {
         primary: '#3871FF',
         secondary: '#B8CCFF',
         dark: '#283345',
         darkAccent: '#475B7B',
+        darkNavbar: '#181F2A',
         lightSecondary: '#A8A8A8',
         danger: '#FF6262',
       },
