@@ -1,11 +1,15 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import Input from '../components/atoms/Input';
 import CreateUserForm from '../components/organisms/CreateUserForm';
 import createUserValidation from '../lib/createUserValidation';
 import ValidationError from '../types/ValidationError';
 import getValidationError from '../utils/getValidationError';
+import useCreateUser from '../lib/api/useCreateUser';
 
 export default function WelcomePage() {
+  const history = useHistory();
+  const { createUser, loading } = useCreateUser();
   const [errors, setErrors] = React.useState<ValidationError[]>([]);
   const [name, setName] = React.useState('');
 
@@ -28,17 +32,23 @@ export default function WelcomePage() {
     return !(_errors?.length > 0);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const isValid = handleValidation();
+    try {
+      const isValid = handleValidation();
 
-    if (!isValid) return;
+      if (!isValid || loading) return;
 
-    console.log('Creating an user...', name);
+      const user = await createUser(name);
+
+      if (user) {
+        history.push('/to-do');
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
-
-  console.log(errors);
 
   return (
     <div className="w-full h-screen flex justify-center items-center flex-col">
@@ -46,7 +56,10 @@ export default function WelcomePage() {
         Welcome {name ? <span>, {name}!</span> : '!'}
       </h1>
 
-      <CreateUserForm handleSubmit={handleSubmit} disabled={errors?.length > 0}>
+      <CreateUserForm
+        handleSubmit={handleSubmit}
+        disabled={errors?.length > 0 || loading}
+      >
         <Input
           name="name"
           value={name}
@@ -55,6 +68,7 @@ export default function WelcomePage() {
           autoComplete="off"
           id="name-input"
           errorMessage={getValidationError(errors, 'name')}
+          disabled={loading}
         />
       </CreateUserForm>
     </div>

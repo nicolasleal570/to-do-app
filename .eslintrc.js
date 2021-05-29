@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['avilatek-typescript'],
+  extends: ['avilatek-typescript', 'prettier'],
   env: {
     es6: true,
     browser: true,
