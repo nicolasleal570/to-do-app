@@ -3,52 +3,28 @@ import { useHistory } from 'react-router-dom';
 import Input from '../components/atoms/Input';
 import CreateUserForm from '../components/organisms/CreateUserForm';
 import createUserValidation from '../lib/createUserValidation';
-import ValidationError from '../types/ValidationError';
 import getValidationError from '../utils/getValidationError';
+import useForm from '../lib/useForm';
 import useCreateUser from '../lib/api/useCreateUser';
 
 export default function WelcomePage() {
   const history = useHistory();
   const { createUser, loading } = useCreateUser();
-  const [errors, setErrors] = React.useState<ValidationError[]>([]);
-  const [name, setName] = React.useState('');
 
-  const handleOnChange =
-    (setter: React.Dispatch<React.SetStateAction<string>>) =>
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name: inputName, value } = e.target;
-      setErrors((prev) => prev.filter((i) => i.inputName !== inputName));
-      setter(value);
-    };
-
-  const handleValidation = (): boolean => {
-    const _errors = createUserValidation({ name });
-    if (_errors?.length > 0) {
-      setErrors(_errors);
-    } else {
-      setErrors([]);
-    }
-
-    return !(_errors?.length > 0);
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    try {
-      const isValid = handleValidation();
-
-      if (!isValid || loading) return;
-
-      const user = await createUser(name);
-
-      if (user) {
-        history.push('/to-do');
-      }
-    } catch (err) {
-      console.log(err);
+  const onSubmitCallback = async (data: any) => {
+    const user = await createUser(data);
+    if (user) {
+      history.push('/to-do');
     }
   };
+
+  const { values, errors, onChange, onSubmit } = useForm({
+    initialState: { name: '' },
+    onSubmitCallback,
+    validationFunction: createUserValidation,
+  });
+
+  const name = values?.name || '';
 
   return (
     <div className="w-full h-screen flex justify-center items-center flex-col">
@@ -57,13 +33,13 @@ export default function WelcomePage() {
       </h1>
 
       <CreateUserForm
-        handleSubmit={handleSubmit}
+        handleSubmit={onSubmit}
         disabled={errors?.length > 0 || loading}
       >
         <Input
           name="name"
           value={name}
-          onChange={handleOnChange(setName)}
+          onChange={onChange}
           placeholder="Enter your name"
           autoComplete="off"
           id="name-input"

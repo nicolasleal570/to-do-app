@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import Button from '../atoms/Button';
 
 interface CreateUserFormProps {
@@ -13,7 +14,10 @@ export default function CreateUserForm({
   handleSubmit,
 }: CreateUserFormProps) {
   return (
-    <form
+    <motion.form
+      initial={{ opacity: 0, scale: 0.7, y: 100 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.7, y: 100 }}
       onSubmit={handleSubmit}
       className="w-11/12 md:w-7/12 xl:w-5/12 bg-white rounded-md p-4"
     >
@@ -29,6 +33,6 @@ export default function CreateUserForm({
           Create
         </Button>
       </div>
-    </form>
+    </motion.form>
   );
 }
