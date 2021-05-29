@@ -1,8 +1,13 @@
-export default function validateString(str: any) {
+export default function validateString(str: any, canUseSpaces = false) {
   if (!String(str)) {
     return false;
   }
 
-  const regex = /^[a-zA-ZÀ-ú]+$/;
-  return regex.test(str);
+  if (canUseSpaces) {
+    const regexWithSpace = /^[a-zA-ZÀ-ú ]+$/;
+    return regexWithSpace.test(str);
+  }
+
+  const regexWithoutSpace = /^[a-zA-ZÀ-ú]+$/;
+  return regexWithoutSpace.test(str);
 }

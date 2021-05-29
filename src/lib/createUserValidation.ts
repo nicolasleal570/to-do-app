@@ -8,7 +8,7 @@ interface UserData {
 export default function createUserValidation({ name }: UserData) {
   const errors: ValidationError[] = [];
 
-  if (!validateString(name)) {
+  if (!validateString(name, true)) {
     errors.push({
       inputName: 'name',
       message: 'Sorry! You have to enter a valid name before continue',

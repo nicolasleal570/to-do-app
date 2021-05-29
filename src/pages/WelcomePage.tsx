@@ -1,19 +1,18 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import Input from '../components/atoms/Input';
 import CreateUserForm from '../components/organisms/CreateUserForm';
 import createUserValidation from '../lib/createUserValidation';
 import getValidationError from '../utils/getValidationError';
 import useForm from '../lib/useForm';
-import useCreateUser from '../lib/api/useCreateUser';
+import useUser from '../lib/useUser';
 
-export default function WelcomePage() {
-  const history = useHistory();
-  const { createUser, loading } = useCreateUser();
+export default function WelcomePage({ history, location }) {
+  const { registerUser, user, loading } = useUser();
 
   const onSubmitCallback = async (data: any) => {
-    const user = await createUser(data);
-    if (user) {
+    const _user = await registerUser(data);
+    if (_user) {
       history.push('/to-do');
     }
   };
@@ -25,6 +24,21 @@ export default function WelcomePage() {
   });
 
   const name = values?.name || '';
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (!loading && user) {
+    return (
+      <Redirect
+        to={{
+          pathname: '/to-do',
+          state: { from: location },
+        }}
+      />
+    );
+  }
 
   return (
     <div className="w-full h-screen flex justify-center items-center flex-col">
