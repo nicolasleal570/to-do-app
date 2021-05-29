@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import Input from '../components/atoms/Input';
+import Loader from '../components/atoms/Loader';
 import CreateUserForm from '../components/organisms/CreateUserForm';
 import createUserValidation from '../lib/createUserValidation';
 import getValidationError from '../utils/getValidationError';
@@ -25,8 +26,8 @@ export default function WelcomePage({ history, location }) {
 
   const name = values?.name || '';
 
-  if (loading) {
-    return <p>Loading...</p>;
+  if (loading && !name) {
+    return <Loader centeredOnScreen />;
   }
 
   if (!loading && user) {
@@ -49,6 +50,7 @@ export default function WelcomePage({ history, location }) {
       <CreateUserForm
         handleSubmit={onSubmit}
         disabled={errors?.length > 0 || loading}
+        loading={loading}
       >
         <Input
           name="name"

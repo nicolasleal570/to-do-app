@@ -1,18 +1,19 @@
 import React from 'react';
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import PrivateRoute from '../components/atoms/PrivateRoute';
+import Loader from '../components/atoms/Loader';
 
 const WelcomePage = React.lazy(() => import('../pages/WelcomePage'));
+const ToDosPage = React.lazy(() => import('../pages/ToDosPage'));
 
-const ToDoPage = () => <p>TO-DO LIST </p>;
 const ToDoFavoritesPage = () => <p>TO-DO FAVORITES LIST </p>;
 
 export default function Routes() {
   return (
-    <React.Suspense fallback={<>Loading...</>}>
+    <React.Suspense fallback={<Loader centeredOnScreen />}>
       <BrowserRouter>
         <Switch>
-          <PrivateRoute path="/to-do" component={ToDoPage} exact />
+          <PrivateRoute path="/to-do" component={ToDosPage} exact />
           <PrivateRoute
             path="/to-do/favorites"
             component={ToDoFavoritesPage}

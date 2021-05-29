@@ -37,7 +37,9 @@ export default function Input({
       />
 
       {errorMessage && (
-        <p className="text-danger mt-3 text-sm">{errorMessage}</p>
+        <p data-testid={`${id}-error`} className="text-danger mt-3 text-sm">
+          {errorMessage}
+        </p>
       )}
     </div>
   );

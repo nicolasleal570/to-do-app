@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
+import Loader from './Loader';
 import useUser from '../../lib/useUser';
 
 const PrivateRoute = ({ component: View, ...args }) => {
@@ -24,7 +25,7 @@ const PrivateRoute = ({ component: View, ...args }) => {
           );
         }
 
-        return <h1>Loading...</h1>;
+        return <Loader centeredOnScreen />;
       }}
     />
   );

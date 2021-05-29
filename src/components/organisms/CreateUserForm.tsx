@@ -5,12 +5,14 @@ import Button from '../atoms/Button';
 interface CreateUserFormProps {
   children: React.ReactNode;
   disabled: boolean;
+  loading: boolean;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
 export default function CreateUserForm({
   children,
   disabled,
+  loading,
   handleSubmit,
 }: CreateUserFormProps) {
   return (
@@ -19,7 +21,7 @@ export default function CreateUserForm({
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.7, y: 100 }}
       onSubmit={handleSubmit}
-      className="w-11/12 md:w-7/12 xl:w-5/12 bg-white rounded-md p-4"
+      className="w-11/12 md:w-7/12 lg:w-4/12 bg-white rounded-md p-4"
     >
       <p className="lg:text-xl text-center text-dark">
         Enter a name and continue
@@ -29,7 +31,12 @@ export default function CreateUserForm({
       <div className="my-5">{children}</div>
 
       <div className="w-full flex justify-center">
-        <Button id="create-user" type="submit" disabled={disabled}>
+        <Button
+          id="create-user"
+          type="submit"
+          disabled={disabled}
+          loading={loading}
+        >
           Create
         </Button>
       </div>

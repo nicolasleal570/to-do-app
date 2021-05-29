@@ -12,6 +12,7 @@ interface ButtonProps
   id: string;
   size?: ButtonSizeVariants;
   color?: ButtonColorVariants;
+  loading?: boolean;
 }
 
 export default function Button({
@@ -20,7 +21,8 @@ export default function Button({
   size = ButtonSizeVariants.normal,
   color = ButtonColorVariants.primary,
   children,
-  disabled,
+  disabled = false,
+  loading = false,
   ...rest
 }: ButtonProps) {
   return (
@@ -28,7 +30,7 @@ export default function Button({
       // eslint-disable-next-line react/button-has-type
       type={type}
       id={id}
-      disabled={disabled}
+      disabled={disabled || loading}
       data-testid={id}
       className={classNames({
         'opacity-100 cursor-pointer': !disabled,
@@ -41,7 +43,7 @@ export default function Button({
       })}
       {...rest}
     >
-      {children}
+      {loading ? <span>Loading...</span> : children}
     </button>
   );
 }
