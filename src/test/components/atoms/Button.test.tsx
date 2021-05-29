@@ -66,7 +66,7 @@ describe('Button Component', () => {
     expect(buttonElement).toHaveTextContent('Loading..');
   });
 
-  it('Should support type prop', () => {
+  it('Should support type submit prop and send a form', () => {
     const children = 'Create ToDo';
     const onSubmit = jest.fn((e) => e.preventDefault());
 
