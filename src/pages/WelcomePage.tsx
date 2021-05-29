@@ -18,7 +18,7 @@ export default function WelcomePage() {
     }
   };
 
-  const { values, errors, onChange, onSubmit } = useForm({
+  const { values, errors, onChange, onSubmit } = useForm<{ name: string }>({
     initialState: { name: '' },
     onSubmitCallback,
     validationFunction: createUserValidation,

@@ -1,35 +1,34 @@
 import { useState, useReducer, ChangeEvent } from 'react';
 import ValidationError from '../types/ValidationError';
 
-interface UseFormProps {
-  initialState: any;
+interface UseFormProps<T> {
+  initialState: T;
   onSubmitCallback: (data: any) => void;
   validationFunction?: (data) => Array<ValidationError>;
 }
 
-interface UseFormReturnType {
-  values: any;
+interface UseFormReturnType<T> {
+  values: T;
   errors: Array<ValidationError>;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
-export default function useForm({
+export default function useForm<T>({
   initialState,
   onSubmitCallback,
   validationFunction,
-}: UseFormProps): UseFormReturnType {
+}: UseFormProps<T>): UseFormReturnType<T> {
   const [errors, setErrors] = useState<ValidationError[]>([]);
 
-  const reducer = (
-    state: typeof initialState,
-    payload: { field: string; value: string }
-  ) => ({
+  const reducer = (state: T, payload: { field: string; value: string }): T => ({
     ...state,
     [payload.field]: payload.value,
   });
 
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState, () => ({
+    ...initialState,
+  }));
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name: field, value } = e.target;
