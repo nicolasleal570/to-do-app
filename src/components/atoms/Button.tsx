@@ -9,22 +9,30 @@ interface ButtonProps
     HTMLButtonElement
   > {
   children: React.ReactNode;
+  id: string;
   size?: ButtonSizeVariants;
   color?: ButtonColorVariants;
 }
 
 export default function Button({
   type = 'button',
+  id,
   size = ButtonSizeVariants.normal,
   color = ButtonColorVariants.primary,
   children,
+  disabled,
   ...rest
 }: ButtonProps) {
   return (
     <button
       // eslint-disable-next-line react/button-has-type
       type={type}
+      id={id}
+      disabled={disabled}
+      data-testid={id}
       className={classNames({
+        'opacity-100 cursor-pointer': !disabled,
+        'opacity-50 cursor-not-allowed': disabled,
         'px-6 py-2.5 rounded text-base': size === 'normal',
         'px-5 py-2 rounded-sm text-sm': size === 'small',
         'bg-primary text-white': color === 'primary',

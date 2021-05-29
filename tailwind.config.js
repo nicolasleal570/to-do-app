@@ -25,6 +25,7 @@ module.exports = {
         lightSecondary: '#A8A8A8',
         danger: '#FF6262',
       },
+      opacity: ['disabled'],
     },
   },
   plugins: [
