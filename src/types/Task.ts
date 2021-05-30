@@ -1,7 +1,9 @@
 export default interface Task {
+  id?: string;
   title: string;
   description: string;
   isFavorite: boolean;
   completed: boolean;
-  createdAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }

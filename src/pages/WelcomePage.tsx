@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom';
 import Input from '../components/atoms/Input';
 import Loader from '../components/atoms/Loader';
 import CreateUserForm from '../components/organisms/CreateUserForm';
-import createUserValidation from '../lib/createUserValidation';
+import createUserValidation from '../utils/createUserValidation';
 import getValidationError from '../utils/getValidationError';
 import useForm from '../lib/useForm';
 import useUser from '../lib/useUser';

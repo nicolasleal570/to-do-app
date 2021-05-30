@@ -1,5 +1,5 @@
 import ValidationError from '../types/ValidationError';
-import validateString from '../utils/validateString';
+import validateString from './validateString';
 
 interface UserData {
   name: string;

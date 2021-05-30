@@ -1,10 +1,10 @@
-import { useState, useReducer, ChangeEvent } from 'react';
+import { useState, ChangeEvent } from 'react';
 import ValidationError from '../types/ValidationError';
 
 interface UseFormProps<T> {
   initialState: T;
-  onSubmitCallback: (data: any) => void;
-  validationFunction?: (data) => Array<ValidationError>;
+  onSubmitCallback: (data: T) => void;
+  validationFunction?: (data: T) => Array<ValidationError>;
 }
 
 interface UseFormReturnType<T> {
@@ -12,6 +12,7 @@ interface UseFormReturnType<T> {
   errors: Array<ValidationError>;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  onClear: () => void;
 }
 
 export default function useForm<T>({
@@ -20,31 +21,27 @@ export default function useForm<T>({
   validationFunction,
 }: UseFormProps<T>): UseFormReturnType<T> {
   const [errors, setErrors] = useState<ValidationError[]>([]);
-
-  const reducer = (state: T, payload: { field: string; value: string }): T => ({
-    ...state,
-    [payload.field]: payload.value,
-  });
-
-  const [state, dispatch] = useReducer(reducer, initialState, () => ({
-    ...initialState,
-  }));
+  const [values, setValues] = useState<T>(initialState);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name: field, value } = e.target;
     setErrors((prev) => prev.filter((i) => i.inputName !== field));
-    dispatch({ field, value });
+    setValues((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleValidation = (): boolean => {
-    const _errors = validationFunction({ ...state });
-    if (_errors?.length > 0) {
-      setErrors(_errors);
-    } else {
-      setErrors([]);
+    if (validationFunction) {
+      const _errors = validationFunction({ ...values });
+      if (_errors?.length > 0) {
+        setErrors(_errors);
+      } else {
+        setErrors([]);
+      }
+
+      return !(_errors?.length > 0);
     }
 
-    return !(_errors?.length > 0);
+    return true;
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -54,13 +51,16 @@ export default function useForm<T>({
 
     if (!isValid) return;
 
-    onSubmitCallback(state);
+    onSubmitCallback(values);
   };
 
+  const handleClear = () => setValues({ ...initialState });
+
   return {
-    values: state,
+    values,
     errors,
     onChange: handleChange,
     onSubmit: handleSubmit,
+    onClear: handleClear,
   };
 }

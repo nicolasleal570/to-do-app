@@ -26,7 +26,7 @@ export default function Input({
         id={id}
         data-testid={id}
         className={classNames(
-          'block w-full py-3 px-5 rounded text-sm md:text-base',
+          'block w-full py-2 px-3 md:py-3 md:px-5 rounded text-sm md:text-base',
           {
             'border-0 bg-darkAccent text-white placeholder-lightSecondary':
               color === 'dark',

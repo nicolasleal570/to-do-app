@@ -3,17 +3,13 @@
 @tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;900&display=swap');
 
-:root {
-  --loader-offset: 10px;
-}
-
 html,
 body {
   font-family: 'Poppins', sans-serif;
 }
 
 .lds-ellipsis {
-  display: inline-block;
+  display: block;
   position: relative;
   width: 80px;
   height: 80px;

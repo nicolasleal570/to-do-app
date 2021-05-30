@@ -9,6 +9,7 @@ interface UseUserReturnType {
   loading: boolean;
   isLoggedIn: boolean;
   registerUser: (data: { name: string }) => Promise<User>;
+  updateUser: (data: User) => Promise<User>;
   setUser: React.Dispatch<React.SetStateAction<User>>;
 }
 
@@ -70,5 +71,19 @@ export default function useUser(): UseUserReturnType {
       }, 1000);
     });
 
-  return { user, loading, isLoggedIn, registerUser, setUser };
+  const updateUser = (updatedUser: User): Promise<User> =>
+    new Promise<User>((resolve) => {
+      if (loading) return;
+
+      setLoading(true);
+
+      setTimeout(() => {
+        addObject(localStorageKey, updatedUser);
+        setUser(updatedUser);
+        setLoading(false);
+        resolve(updatedUser);
+      }, 1000);
+    });
+
+  return { user, loading, isLoggedIn, registerUser, updateUser, setUser };
 }

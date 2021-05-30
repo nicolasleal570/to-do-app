@@ -44,7 +44,7 @@ export default function Navbar() {
 
           <ul className="flex items-center justify-center text-white font-medium">
             {links.map((link) => (
-              <NavLink {...link} />
+              <NavLink key={link?.url} {...link} />
             ))}
             <li className="w-20 bg-transparent" />
             <li>

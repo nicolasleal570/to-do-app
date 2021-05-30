@@ -45,7 +45,9 @@ export default function Button({
             'p-2.5 rounded text-base': size === ButtonSizeVariants.normal,
             'p-2 rounded-sm text-sm': size === ButtonSizeVariants.small,
             'bg-primary text-white': color === ButtonColorVariants.primary,
+            'bg-secondary text-dark': color === ButtonColorVariants.secondary,
             'bg-dark text-white': color === ButtonColorVariants.dark,
+            'bg-white text-dark': color === ButtonColorVariants.white,
             'bg-danger text-white': color === ButtonColorVariants.danger,
             'w-full': full,
           }

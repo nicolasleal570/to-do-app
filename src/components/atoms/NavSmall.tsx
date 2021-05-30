@@ -103,7 +103,7 @@ export default function NavbarSm({ links, onLogoutCallback }: NavbarSmProps) {
         {isOpen && (
           <ul className="h-full text-white pt-10">
             {links.map((link) => (
-              <NavLinkSm {...link} />
+              <NavLinkSm key={link?.url} {...link} />
             ))}
 
             <NavButtonSm

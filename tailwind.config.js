@@ -30,6 +30,11 @@ module.exports = {
         lightSecondary: '#A8A8A8',
         danger: '#FF6262',
       },
+      spacing: {
+        card: '560px',
+        'task-card': '189px',
+        'task-card-content': '133px',
+      },
       opacity: ['disabled'],
     },
   },
