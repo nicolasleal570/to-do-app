@@ -1,55 +1,129 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import dayjs from 'dayjs';
+import classNames from 'classnames';
 import Button from './Button';
 import ButtonColorVariants from '../../types/enums/ButtonColorVariants';
 import HeartIcon from './icons/HeartIcon';
+import CheckIcon from './icons/CheckIcon';
+import TrashIcon from './icons/TrashIcon';
 import DotsHorizontalIcon from './icons/DotsHorizontalIcon';
 import Task from '../../types/Task';
 import DescriptionEditable from './DescriptionEditable';
 import TitleEditable from './TitleEditable';
 
+interface DraggedContentProps {
+  children: React.ReactNode;
+}
+function DraggedContent({ children }: DraggedContentProps) {
+  return (
+    <div className="absolute w-full h-full top-0 left-0 z-0 rounded">
+      {children}
+    </div>
+  );
+}
+
 interface TaskCardProps {
   task: Task;
   onUpdateTask: (newTask: Task) => Promise<Task>;
+  onDeleteTask: (taskId: string) => Promise<void>;
 }
 
-export default function TaskCard({ task, onUpdateTask }: TaskCardProps) {
+export default function TaskCard({
+  task,
+  onUpdateTask,
+  onDeleteTask,
+}: TaskCardProps) {
+  const [loading, setLoading] = React.useState(false);
+  const [dragging, setDragging] = React.useState(false);
   const [swipeDirection, setSwipeDirection] = React.useState('');
+
+  const handleFavorite = async () => {
+    setLoading(true);
+    await onUpdateTask({ ...task, isFavorite: !task?.isFavorite });
+    setSwipeDirection('');
+    setLoading(false);
+  };
+
   const handleOnClick = () => console.log('click', task);
 
-  const onDrag = (event, info) => {
+  const onDragLeft = async () => {
+    try {
+      handleFavorite();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const onDragRigth = async () => {
+    try {
+      setLoading(true);
+      await onDeleteTask(task?.id);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const onDragEnd = () => setDragging(false);
+
+  const onDragStart = (event, info) => {
+    if (loading) return;
+
+    setDragging(true);
     if (info.delta.x > 0) {
       setSwipeDirection('right');
-      return;
-    }
-    if (info.delta.x < 0) {
+    } else if (info.delta.x < 0) {
       setSwipeDirection('left');
-      return;
     }
-
-    setSwipeDirection('');
   };
+
+  React.useEffect(() => {
+    if (!dragging && !loading) {
+      if (swipeDirection === 'left') {
+        onDragLeft();
+      } else if (swipeDirection === 'right') {
+        onDragRigth();
+      }
+    }
+  }, [dragging, swipeDirection]);
 
   return (
     <>
-      <div className="relative bg-red-400">
+      <div className="relative">
         <motion.div
-          className="relative w-full"
+          className="relative w-full z-10"
           drag="x"
           dragConstraints={{ left: 0, right: 0 }}
-          onDragStart={onDrag}
-          onDragEnd={() => setSwipeDirection('')}
+          onDragStart={onDragStart}
+          onDragEnd={onDragEnd}
+          dragElastic={0.4}
+          dragMomentum={false}
         >
-          <div className="w-full bg-white rounded-t p-4">
+          <div
+            className={classNames('w-full rounded-t p-4', {
+              'bg-white text-dark': !task?.isFavorite,
+              'bg-primary text-white': task?.isFavorite,
+            })}
+          >
             <div className="flex flex-col-reverse md:flex-row items-center lg:justify-between mb-5">
-              <TitleEditable task={task} onUpdateTask={onUpdateTask} />
+              <TitleEditable
+                task={task}
+                onUpdateTask={onUpdateTask}
+                loading={loading}
+                setLoading={setLoading}
+              />
 
               <div className="flex ml-auto">
                 <Button
                   id="dots-task"
                   onClick={handleOnClick}
-                  color={ButtonColorVariants.white}
+                  color={
+                    !task?.isFavorite
+                      ? ButtonColorVariants.white
+                      : ButtonColorVariants.primary
+                  }
+                  disabled={loading}
                   icon
                 >
                   <DotsHorizontalIcon />
@@ -57,17 +131,35 @@ export default function TaskCard({ task, onUpdateTask }: TaskCardProps) {
                 <Button
                   id="check-task"
                   onClick={handleOnClick}
-                  color={ButtonColorVariants.white}
+                  color={
+                    !task?.isFavorite
+                      ? ButtonColorVariants.white
+                      : ButtonColorVariants.primary
+                  }
+                  disabled={loading}
                   icon
                 >
-                  <HeartIcon />
+                  <CheckIcon checked={task?.completed} />
                 </Button>
               </div>
             </div>
-            <DescriptionEditable task={task} onUpdateTask={onUpdateTask} />
+            <DescriptionEditable
+              task={task}
+              onUpdateTask={onUpdateTask}
+              loading={loading}
+              setLoading={setLoading}
+            />
           </div>
 
-          <div className="w-full flex justify-between items-center bg-secondary p-4 rounded-b">
+          <div
+            className={classNames(
+              'w-full flex justify-between items-center p-4 rounded-b',
+              {
+                'bg-white text-dark': task?.isFavorite,
+                'bg-primary text-white': !task?.isFavorite,
+              }
+            )}
+          >
             <p>
               {task?.createdAt === task?.updatedAt ? (
                 <span>
@@ -81,20 +173,39 @@ export default function TaskCard({ task, onUpdateTask }: TaskCardProps) {
             </p>
             <Button
               id="heart-task"
-              onClick={handleOnClick}
-              color={ButtonColorVariants.secondary}
+              onClick={handleFavorite}
+              color={
+                task?.isFavorite
+                  ? ButtonColorVariants.white
+                  : ButtonColorVariants.primary
+              }
+              disabled={loading}
               icon
             >
-              <HeartIcon />
+              <HeartIcon filled={task?.isFavorite} />
             </Button>
           </div>
         </motion.div>
 
         {swipeDirection === 'left' && (
-          <div className="bg-indigo-400">Swipe Left</div>
+          <DraggedContent>
+            <div className="bg-info text-dark w-full h-full p-11 flex items-center justify-end rounded">
+              <HeartIcon
+                width="48"
+                height="48"
+                strokeWidth="1"
+                filled={task?.isFavorite}
+              />
+            </div>
+          </DraggedContent>
         )}
+
         {swipeDirection === 'right' && (
-          <div className="bg-yellow-400">Swipe Right</div>
+          <DraggedContent>
+            <div className="bg-danger text-white w-full h-full p-11 flex items-center justify-start rounded">
+              <TrashIcon width="48" height="48" strokeWidth="1" />
+            </div>
+          </DraggedContent>
         )}
       </div>
     </>

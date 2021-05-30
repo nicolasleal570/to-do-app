@@ -29,6 +29,7 @@ module.exports = {
         darkNavbar: '#181F2A',
         lightSecondary: '#A8A8A8',
         danger: '#FF6262',
+        info: '#F1B170',
       },
       spacing: {
         card: '560px',

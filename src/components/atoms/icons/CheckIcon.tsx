@@ -1,32 +1,33 @@
 import React from 'react';
 
-interface HeartIconProps {
-  filled?: boolean;
+interface CheckIconProps {
+  checked?: boolean;
   width?: string;
   height?: string;
   strokeWidth?: string;
 }
 
-export default function HeartIcon({
-  filled = false,
+export default function CheckIcon({
+  checked = false,
   width = '24',
   height = '24',
   strokeWidth = '2',
-}: HeartIconProps) {
-  if (filled) {
+}: CheckIconProps) {
+  if (checked) {
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width={width}
         height={height}
         viewBox="0 0 24 24"
-        fill="currentColor"
+        fill="none"
         stroke="currentColor"
         strokeWidth={strokeWidth}
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+        <polyline points="9 11 12 14 22 4" />
+        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
       </svg>
     );
   }
@@ -43,7 +44,7 @@ export default function HeartIcon({
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
     </svg>
   );
 }

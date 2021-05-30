@@ -11,7 +11,13 @@ import Loader from '../components/atoms/Loader';
 import TaskCard from '../components/atoms/TaskCard';
 
 export default function ToDosPage() {
-  const { tasks, loading: tasksLoading, createTask, updateTask } = useTask();
+  const {
+    tasks,
+    loading: tasksLoading,
+    createTask,
+    updateTask,
+    deleteTask,
+  } = useTask();
 
   const handleSubmit = async (data: Task) => {
     await createTask(data);
@@ -60,12 +66,20 @@ export default function ToDosPage() {
               handleChange={onChange}
             />
             <div className="w-full md:w-card mx-auto mt-16 overflow-hidden">
+              <button
+                type="button"
+                className="block text-white underline ml-auto mb-5"
+              >
+                Select All
+              </button>
+
               {tasks?.map((task) => (
-                <div className="mb-5" key={task?.id}>
+                <div className="mb-10" key={task?.id}>
                   <TaskCard
                     key={task?.id}
                     task={task}
                     onUpdateTask={updateTask}
+                    onDeleteTask={deleteTask}
                   />
                 </div>
               ))}

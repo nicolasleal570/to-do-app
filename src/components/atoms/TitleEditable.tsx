@@ -8,18 +8,24 @@ import getValidationError from '../../utils/getValidationError';
 
 interface TitleEditableProps {
   task: Task;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   onUpdateTask: (newTask: Task) => Promise<Task>;
 }
 
 export default function TitleEditable({
   task,
+  loading,
+  setLoading,
   onUpdateTask,
 }: TitleEditableProps) {
   const [showTitleInput, setShowTitleInput] = React.useState(false);
 
   const onUpdateDescription = async (updatedTask: Task) => {
+    setLoading(true);
     await onUpdateTask({ ...updatedTask });
     setShowTitleInput(false);
+    setLoading(false);
   };
 
   const { values, onChange, onSubmit, errors } = useForm<Task>({
@@ -29,6 +35,12 @@ export default function TitleEditable({
   });
 
   const showInput = () => setShowTitleInput(true);
+
+  React.useEffect(() => {
+    if (loading) {
+      setShowTitleInput(false);
+    }
+  }, [loading]);
 
   const title = values?.title || '';
 
@@ -41,6 +53,7 @@ export default function TitleEditable({
           value={title}
           errorMessage={getValidationError(errors, 'title')}
           onChange={onChange}
+          disabled={loading}
         />
       ) : (
         <button
@@ -52,6 +65,7 @@ export default function TitleEditable({
             }
           )}
           onClick={showInput}
+          disabled={loading}
         >
           {task?.title ? (
             <p className="font-bold flex-1 mr-4">{task?.title}</p>

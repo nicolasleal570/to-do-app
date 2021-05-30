@@ -6,44 +6,38 @@ import useForm from '../../lib/useForm';
 
 interface DescriptionEditableProps {
   task: Task;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   onUpdateTask: (newTask: Task) => Promise<Task>;
 }
 
 export default function DescriptionEditable({
   task,
+  loading,
+  setLoading,
   onUpdateTask,
 }: DescriptionEditableProps) {
   const [showDescriptionInput, setShowDescriptionInput] = React.useState(false);
 
   const onUpdateDescription = async () => {
+    setLoading(true);
     await onUpdateTask({ ...task, description });
     setShowDescriptionInput(false);
+    setLoading(false);
   };
 
   const { values, onChange, onSubmit } = useForm<Task>({
     initialState: { ...task },
     onSubmitCallback: onUpdateDescription,
-    validationFunction: () => {
-      console.log('valid');
-      return [];
-    },
   });
 
-  const handleEnterDescription =
-    (onBlur = false) =>
-    async () => {
-      if (onBlur) {
-        if (description?.trim()) {
-          setShowDescriptionInput(false);
-          // await onUpdateDescription();
-        } else {
-          setShowDescriptionInput(false);
-        }
-        return;
-      }
+  const handleEnterDescription = () => setShowDescriptionInput(true);
 
-      setShowDescriptionInput(true);
-    };
+  React.useEffect(() => {
+    if (loading) {
+      setShowDescriptionInput(false);
+    }
+  }, [loading]);
 
   const description = values?.description || '';
 
@@ -56,7 +50,7 @@ export default function DescriptionEditable({
           className="bg-red-400"
           value={description}
           onChange={onChange}
-          onBlur={handleEnterDescription(true)}
+          disabled={loading}
         />
       ) : (
         <button
@@ -64,10 +58,14 @@ export default function DescriptionEditable({
           className={classNames(
             'block w-full text-left p-2 bg-transparent hover:bg-darkAccent hover:bg-opacity-10',
             {
-              'text-lightSecondary text-sm underline': !task?.description,
+              'text-lightSecondary text-sm underline':
+                !task?.description && !task?.isFavorite,
+              'text-white text-sm underline':
+                !task?.description && task?.isFavorite,
             }
           )}
-          onClick={handleEnterDescription()}
+          onClick={handleEnterDescription}
+          disabled={loading}
         >
           {task?.description ? task?.description : 'Enter a description'}
         </button>

@@ -68,9 +68,7 @@ export default function useTask(): UseTaskReturnType {
 
       if (!taskToUpdate) {
         setTimeout(() => {
-          reject(
-            new Error('Sorry! You have to enter a valid task to update it')
-          );
+          reject();
           setLoading(false);
         }, 1000);
 
@@ -103,9 +101,7 @@ export default function useTask(): UseTaskReturnType {
 
       if (!taskToDelete) {
         setTimeout(() => {
-          reject(
-            new Error('Sorry! You have to enter a valid task to delete it')
-          );
+          reject();
           setLoading(false);
         }, 1000);
 
