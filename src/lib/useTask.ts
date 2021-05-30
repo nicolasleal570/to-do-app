@@ -64,9 +64,11 @@ export default function useTask(): UseTaskReturnType {
 
       setLoading(true);
 
-      const taskToUpdate = tasks?.find((t) => t.id === newTaskData?.id) || null;
+      const taskToUpdateIndex = tasks?.findIndex(
+        (t) => t.id === newTaskData?.id
+      );
 
-      if (!taskToUpdate) {
+      if (taskToUpdateIndex < 0) {
         setTimeout(() => {
           reject();
           setLoading(false);
@@ -76,16 +78,16 @@ export default function useTask(): UseTaskReturnType {
       }
 
       const updatedTask: Task = {
-        ...taskToUpdate,
+        ...tasks[taskToUpdateIndex],
         ...newTaskData,
         updatedAt: new Date().toISOString(),
       };
 
+      const newArr = [].concat(tasks);
+      newArr[taskToUpdateIndex] = updatedTask;
+
       setTimeout(() => {
-        setTasks((prev) => [
-          updatedTask,
-          ...prev.filter((t) => t?.id !== updatedTask?.id),
-        ]);
+        setTasks(newArr);
         setLoading(false);
         resolve(updatedTask);
       }, 1000);
