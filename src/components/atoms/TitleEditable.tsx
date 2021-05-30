@@ -9,6 +9,7 @@ import getValidationError from '../../utils/getValidationError';
 interface TitleEditableProps {
   task: Task;
   loading: boolean;
+  disabled: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   onUpdateTask: (newTask: Task) => Promise<Task>;
 }
@@ -16,6 +17,7 @@ interface TitleEditableProps {
 export default function TitleEditable({
   task,
   loading,
+  disabled,
   setLoading,
   onUpdateTask,
 }: TitleEditableProps) {
@@ -53,19 +55,18 @@ export default function TitleEditable({
           value={title}
           errorMessage={getValidationError(errors, 'title')}
           onChange={onChange}
-          disabled={loading}
+          disabled={disabled}
+          autoFocus
         />
       ) : (
         <button
           type="button"
-          className={classNames(
-            'block w-full text-left p-2 bg-transparent hover:bg-darkAccent hover:bg-opacity-10',
-            {
-              'text-lightSecondary text-sm underline': !task?.title,
-            }
-          )}
+          className={classNames('block w-full text-left p-2 bg-transparent ', {
+            'text-lightSecondary text-sm underline': !task?.title,
+            'hover:bg-darkAccent hover:bg-opacity-10': !disabled,
+          })}
           onClick={showInput}
-          disabled={loading}
+          disabled={loading || disabled}
         >
           {task?.title ? (
             <p className="font-bold flex-1 mr-4">{task?.title}</p>

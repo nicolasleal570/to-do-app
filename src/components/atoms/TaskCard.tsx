@@ -81,6 +81,8 @@ export default function TaskCard({
     }
   }, [dragging, loading, swipeDirection]);
 
+  const disabledCard = selected || loading;
+
   return (
     <div
       className={classNames(
@@ -92,7 +94,7 @@ export default function TaskCard({
       onDoubleClick={() => setSelected((prev) => !prev)}
     >
       <DraggableContainer
-        disabled={selected || loading}
+        disabled={disabledCard}
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}
       >
@@ -107,6 +109,7 @@ export default function TaskCard({
               task={task}
               onUpdateTask={onUpdateTask}
               loading={loading}
+              disabled={disabledCard}
               setLoading={setLoading}
             />
 
@@ -119,7 +122,7 @@ export default function TaskCard({
                     ? ButtonColorVariants.white
                     : ButtonColorVariants.primary
                 }
-                disabled={loading}
+                disabled={disabledCard}
                 icon
               >
                 <DotsHorizontalIcon />
@@ -132,7 +135,7 @@ export default function TaskCard({
                     ? ButtonColorVariants.white
                     : ButtonColorVariants.primary
                 }
-                disabled={loading}
+                disabled={disabledCard}
                 icon
               >
                 <CheckIcon checked={task?.completed} />
@@ -143,6 +146,7 @@ export default function TaskCard({
             task={task}
             onUpdateTask={onUpdateTask}
             loading={loading}
+            disabled={disabledCard}
             setLoading={setLoading}
           />
         </div>
@@ -173,7 +177,7 @@ export default function TaskCard({
                 ? ButtonColorVariants.white
                 : ButtonColorVariants.primary
             }
-            disabled={loading}
+            disabled={disabledCard}
             icon
           >
             <HeartIcon filled={task?.isFavorite} />
