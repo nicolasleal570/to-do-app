@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import TrashIcon from './icons/TrashIcon';
 import HeartIcon from './icons/HeartIcon';
+import useViewport, { UseViewportSizeVariants } from '../../lib/useViewport';
 
 interface DraggableContainerProps {
   disabled: boolean;
@@ -18,7 +19,7 @@ export default function DraggableContainer({
   onDragRight,
   onDragLeft,
 }: DraggableContainerProps) {
-  const dragConstraintsRef = React.useRef<HTMLDivElement>(null);
+  const { viewport } = useViewport();
   const [finishedAnimation, setFinishedAnimation] = React.useState(false);
   const [direction, setDirection] = React.useState('');
 
@@ -27,9 +28,15 @@ export default function DraggableContainer({
       setDirection('');
     }
 
-    if (info?.offset?.x > 300) {
+    const offset =
+      viewport === UseViewportSizeVariants.lg ||
+      viewport === UseViewportSizeVariants.xl
+        ? 100
+        : 450;
+
+    if (info?.offset?.x > offset) {
       setDirection('right');
-    } else if (info?.offset?.x < -300) {
+    } else if (info?.offset?.x < offset * -1) {
       setDirection('left');
     }
     setFinishedAnimation(true);
@@ -65,11 +72,17 @@ export default function DraggableContainer({
       <motion.div
         className="relative w-fill z-10"
         drag="x"
-        dragElastic={0}
-        dragConstraints={dragConstraintsRef}
+        dragElastic={
+          viewport === UseViewportSizeVariants.sm ||
+          viewport === UseViewportSizeVariants.md
+            ? 0.1
+            : 0.5
+        }
+        dragConstraints={{ left: 0, right: 0 }}
         onAnimationStart={() => setFinishedAnimation(false)}
         onDragEnd={handleDragEnd}
         whileTap={{ cursor: 'grabbing' }}
+        dragMomentum
       >
         {children}
       </motion.div>
@@ -79,16 +92,11 @@ export default function DraggableContainer({
           'flex items-center justify-between  absolute w-full h-full top-0 left-0 z-0 rounded'
         )}
       >
-        <div className="flex-1 bg-danger text-white w-full h-full p-11 flex items-center justify-center rounded-l">
+        <div className="flex-1 bg-danger text-white w-full h-full p-11 flex items-center justify-start rounded-l">
           <TrashIcon width="48" height="48" strokeWidth="1" />
         </div>
 
-        <div
-          ref={dragConstraintsRef}
-          className="flex-2 bg-white text-white w-full h-full p-11"
-        />
-
-        <div className="flex-1 bg-info text-dark w-full h-full p-11 flex items-center justify-center rounded-r">
+        <div className="flex-1 bg-info text-dark w-full h-full p-11 flex items-center justify-end rounded-r">
           <HeartIcon
             width="48"
             height="48"

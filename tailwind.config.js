@@ -29,7 +29,8 @@ module.exports = {
         darkNavbar: '#181F2A',
         lightSecondary: '#A8A8A8',
         danger: '#dc3545',
-        info: '#20c997',
+        warning: '#FCC500',
+        info: '#00B74E',
         'info-dark': '#13795b',
       },
       spacing: {

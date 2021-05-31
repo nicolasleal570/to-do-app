@@ -1,34 +1,36 @@
 import { useState, useEffect } from 'react';
 
-enum UseViewportSize {
+export enum UseViewportSizeVariants {
   sm = 'sm',
   md = 'md',
   lg = 'lg',
   xl = 'xl',
 }
 
-const getViewport = (): UseViewportSize => {
+const getViewport = (): UseViewportSizeVariants => {
   const viewportWidth = document.getElementsByTagName('html')[0].offsetWidth;
 
   if (viewportWidth < 640) {
-    return UseViewportSize.sm;
+    return UseViewportSizeVariants.sm;
   }
   if (viewportWidth < 768) {
-    return UseViewportSize.md;
+    return UseViewportSizeVariants.md;
   }
   if (viewportWidth < 1024) {
-    return UseViewportSize.lg;
+    return UseViewportSizeVariants.lg;
   }
 
-  return UseViewportSize.xl;
+  return UseViewportSizeVariants.xl;
 };
 
 interface UseViewportReturnType {
-  viewport: UseViewportSize;
+  viewport: UseViewportSizeVariants;
 }
 
 export default function useViewport(): UseViewportReturnType {
-  const [viewport, setViewport] = useState<UseViewportSize>(getViewport());
+  const [viewport, setViewport] = useState<UseViewportSizeVariants>(
+    getViewport()
+  );
   const oldResize: (a: UIEvent) => any = window.onresize;
   const onResize = (evt?: UIEvent) => {
     if (evt) {

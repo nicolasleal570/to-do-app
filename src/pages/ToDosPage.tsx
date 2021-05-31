@@ -3,8 +3,6 @@ import Button from '../components/atoms/Button';
 import ButtonColorVariants from '../types/enums/ButtonColorVariants';
 import Wrapper from '../components/atoms/Wrapper';
 import Navbar from '../components/molecules/Navbar';
-import TrashIcon from '../components/atoms/icons/TrashIcon';
-import HeartIcon from '../components/atoms/icons/HeartIcon';
 import EmptyTasksList from '../components/molecules/EmptyTasksList';
 import useForm from '../lib/useForm';
 import createTaskValidation from '../utils/createTaskValidation';
@@ -13,6 +11,7 @@ import useTask from '../lib/useTask';
 import CreateTaskForm from '../components/organisms/CreateTaskForm';
 import Loader from '../components/atoms/Loader';
 import TaskCard from '../components/atoms/TaskCard';
+import ToolsBar from '../components/atoms/ToolsBar';
 
 export default function ToDosPage() {
   const {
@@ -48,30 +47,6 @@ export default function ToDosPage() {
   const [hideCreateTaskForm, setHideCreateTaskForm] = React.useState(false);
 
   const onCreateFirstTask = () => setHideCreateTaskForm(false);
-
-  const onDeleteSelectedTasks = async () => {
-    const ids = [];
-    tasksSelected.forEach((selected, idx) => {
-      if (selected) {
-        const task = tasks[idx];
-        ids.push(task.id);
-      }
-    });
-    await deleteManyTasks(ids);
-  };
-
-  const onAddSelectedTasksToFavorites =
-    (addToFavorites = true) =>
-    async () => {
-      const ids = [];
-      tasksSelected.forEach((selected, idx) => {
-        if (selected) {
-          const task = tasks[idx];
-          ids.push(task.id);
-        }
-      });
-      await addManyTasksToFavorites(ids, addToFavorites);
-    };
 
   const onSelectAllTasks = () => {
     setTasksSelected((prev) => [...prev.map((_) => true)]);
@@ -128,38 +103,14 @@ export default function ToDosPage() {
               handleChange={onChange}
             />
 
-            {someTasksAreSelected && (
-              <div className="grid grid-cols-8 gap-4 w-full md:w-card mx-auto p-4 mt-16 mb-5 overflow-hidden bg-white">
-                <Button
-                  id="delete-selection-btn"
-                  onClick={onDeleteSelectedTasks}
-                  color={ButtonColorVariants.danger}
-                  disabled={tasksLoading}
-                  icon
-                >
-                  <TrashIcon />
-                </Button>
-                <Button
-                  id="remove-selection-favorites-btn"
-                  onClick={onAddSelectedTasksToFavorites(false)}
-                  color={ButtonColorVariants.white}
-                  disabled={tasksLoading}
-                  icon
-                  borders
-                >
-                  <HeartIcon />
-                </Button>
-
-                <Button
-                  id="add-selection-favorites-btn"
-                  onClick={onAddSelectedTasksToFavorites()}
-                  disabled={tasksLoading}
-                  icon
-                >
-                  <HeartIcon filled />
-                </Button>
-              </div>
-            )}
+            <ToolsBar
+              tasksLoading={tasksLoading}
+              someTasksAreSelected={someTasksAreSelected}
+              tasks={tasks}
+              tasksSelected={tasksSelected}
+              deleteManyTasks={deleteManyTasks}
+              addManyTasksToFavorites={addManyTasksToFavorites}
+            />
 
             <div className="w-full md:w-card mx-auto mt-16 overflow-hidden">
               <div className="mb-5">
