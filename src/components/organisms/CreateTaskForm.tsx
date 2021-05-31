@@ -39,6 +39,7 @@ export default function CreateTaskForm({
         errorMessage={getValidationError(errors, 'title')}
         value={values?.title}
         autoComplete="off"
+        disabled={loading}
       />
 
       <div className="mt-4 md:mt-0 md:ml-4 w-full md:w-28">

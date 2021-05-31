@@ -8,10 +8,10 @@ interface UseTaskReturnType {
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
   getTasks: () => Promise<Task[]>;
-  getTask: (taskId: string) => Promise<Task>;
   createTask: (newTask: Task) => Promise<Task>;
   updateTask: (task: Task) => Promise<Task>;
   deleteTask: (taskId: string) => Promise<void>;
+  deleteManyTasks: (taskIds: string[]) => Promise<void>;
 }
 
 export default function useTask(): UseTaskReturnType {
@@ -19,28 +19,24 @@ export default function useTask(): UseTaskReturnType {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const updateTasksOnUser = async (_tasks: Task[]) => {
+    if (userLoading) return;
+
+    const updatedUser = await updateUser({ ...user, tasks: _tasks });
+    setTasks(updatedUser?.tasks || []);
+    setLoading(false);
+  };
+
   const getTasks = (): Promise<Task[]> =>
     new Promise<Task[]>((resolve) => {
-      if (loading) return;
+      if (loading && tasks?.length > 0) return;
 
       setLoading(true);
       const _tasks = user?.tasks;
 
       setTimeout(() => {
-        resolve(_tasks);
-      }, 1000);
-    });
-
-  const getTask = (taskId: string): Promise<Task> =>
-    new Promise<Task>((resolve) => {
-      if (loading) return;
-
-      setLoading(true);
-
-      const task = tasks?.find((t) => t.id === taskId) || null;
-      setTimeout(() => {
         setLoading(false);
-        resolve(task);
+        resolve(_tasks);
       }, 1000);
     });
 
@@ -53,8 +49,7 @@ export default function useTask(): UseTaskReturnType {
       const task = { ...newTask, id: uuid() };
 
       setTimeout(() => {
-        setTasks((prev) => [task, ...prev]);
-        setLoading(false);
+        updateTasksOnUser([task, ...tasks]);
         resolve(task);
       }, 1000);
     });
@@ -88,8 +83,7 @@ export default function useTask(): UseTaskReturnType {
       newArr[taskToUpdateIndex] = updatedTask;
 
       setTimeout(() => {
-        setTasks(newArr);
-        setLoading(false);
+        updateTasksOnUser(newArr);
         resolve(updatedTask);
       }, 1000);
     });
@@ -112,33 +106,46 @@ export default function useTask(): UseTaskReturnType {
       }
 
       setTimeout(() => {
-        setTasks((prev) => [...prev.filter((t) => t?.id !== taskToDelete?.id)]);
-        setLoading(false);
+        updateTasksOnUser([...tasks.filter((t) => t?.id !== taskToDelete?.id)]);
+        resolve();
+      }, 1000);
+    });
+
+  const deleteManyTasks = (taskIds: string[]): Promise<void> =>
+    new Promise<void>((resolve) => {
+      if (loading) return;
+
+      setLoading(true);
+
+      if (!taskIds?.length) {
+        return resolve();
+      }
+
+      const arr = tasks?.filter((task) => taskIds.indexOf(task?.id) === -1);
+
+      setTimeout(() => {
+        updateTasksOnUser(arr);
         resolve();
       }, 1000);
     });
 
   useEffect(() => {
-    if (!userLoading) {
-      setTasks(user?.tasks || []);
-      setLoading(false);
-    }
-  }, [userLoading]);
+    const fetchTasks = async () => {
+      const _tasks = await getTasks();
+      setTasks(_tasks);
+    };
 
-  useEffect(() => {
-    if (user) {
-      updateUser({ ...user, tasks });
-    }
-  }, [tasks]);
+    fetchTasks();
+  }, []);
 
   return {
     loading,
     tasks,
     setTasks,
     getTasks,
-    getTask,
     createTask,
     updateTask,
     deleteTask,
+    deleteManyTasks,
   };
 }

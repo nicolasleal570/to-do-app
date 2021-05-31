@@ -12,12 +12,15 @@ import TaskCard from '../components/atoms/TaskCard';
 
 export default function ToDosPage() {
   const {
-    tasks,
+    tasks: _tasks,
     loading: tasksLoading,
     createTask,
     updateTask,
     deleteTask,
+    deleteManyTasks,
   } = useTask();
+  const [tasksSelected, setTasksSelected] = React.useState<boolean[]>([]);
+  const [tasks, setTasks] = React.useState<Task[]>([]);
 
   const handleSubmit = async (data: Task) => {
     await createTask(data);
@@ -40,6 +43,37 @@ export default function ToDosPage() {
   const [hideCreateTaskForm, setHideCreateTaskForm] = React.useState(false);
 
   const onCreateFirstTask = () => setHideCreateTaskForm(false);
+
+  const onDeleteSelectedTasks = async () => {
+    const ids = [];
+    tasksSelected.forEach((selected, idx) => {
+      if (selected) {
+        const task = tasks[idx];
+        console.log(task);
+        ids.push(task.id);
+      }
+    });
+    await deleteManyTasks(ids);
+  };
+  React.useEffect(() => {
+    const sortedArr = [].concat(_tasks).sort((a, b) => {
+      if (a?.completed === b?.completed) {
+        return 0;
+      }
+
+      return a?.completed ? 1 : -1;
+    });
+
+    setTasks(sortedArr);
+
+    if (_tasks?.length !== tasksSelected?.length) {
+      setTasksSelected(
+        Array(_tasks?.length)
+          .fill('')
+          .map(() => false)
+      );
+    }
+  }, [_tasks]);
 
   React.useEffect(() => {
     if (!tasksLoading) {
@@ -65,12 +99,27 @@ export default function ToDosPage() {
               handleSubmit={onSubmit}
               handleChange={onChange}
             />
+
             <div className="w-full md:w-card mx-auto mt-16 overflow-hidden">
-              {tasks?.map((task) => (
+              <button
+                type="button"
+                className="text-white mb-10"
+                onClick={onDeleteSelectedTasks}
+              >
+                Delete All
+              </button>
+
+              {tasks?.map((task, idx) => (
                 <div className="mb-10" key={task?.id}>
                   <TaskCard
                     key={task?.id}
                     task={task}
+                    selected={tasksSelected[idx]}
+                    setSelected={(value) => {
+                      const arr: boolean[] = [...tasksSelected];
+                      arr[idx] = value;
+                      setTasksSelected(arr);
+                    }}
                     onUpdateTask={updateTask}
                     onDeleteTask={deleteTask}
                   />

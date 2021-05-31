@@ -15,18 +15,21 @@ import TitleEditable from './TitleEditable';
 
 interface TaskCardProps {
   task: Task;
+  selected: boolean;
+  setSelected: (selected: boolean) => void;
   onUpdateTask: (newTask: Task) => Promise<Task>;
   onDeleteTask: (taskId: string) => Promise<void>;
 }
 
-export default function TaskCard({
+const TaskCard = ({
   task,
+  selected,
+  setSelected,
   onUpdateTask,
   onDeleteTask,
-}: TaskCardProps) {
+}: TaskCardProps) => {
   const [editDescription, setEditDescription] = React.useState<boolean>(false);
   const [editTitle, setEditTitle] = React.useState<boolean>(false);
-  const [selected, setSelected] = React.useState<boolean>(false);
   const [dragging, setDragging] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [swipeDirection, setSwipeDirection] = React.useState('');
@@ -52,7 +55,7 @@ export default function TaskCard({
 
   const onDoubleClick = () => {
     if (!loading && !task?.completed) {
-      setSelected((prev) => !prev);
+      setSelected(!selected);
     }
   };
 
@@ -240,4 +243,6 @@ export default function TaskCard({
       )}
     </div>
   );
-}
+};
+
+export default TaskCard;
