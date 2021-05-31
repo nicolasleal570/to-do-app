@@ -6,6 +6,7 @@ import Button from './Button';
 import ButtonColorVariants from '../../types/enums/ButtonColorVariants';
 import HeartIcon from './icons/HeartIcon';
 import CheckIcon from './icons/CheckIcon';
+import CheckSquareIcon from './icons/CheckSquareIcon';
 import TrashIcon from './icons/TrashIcon';
 import DotsHorizontalIcon from './icons/DotsHorizontalIcon';
 import Task from '../../types/Task';
@@ -23,9 +24,7 @@ export default function TaskCard({
   onUpdateTask,
   onDeleteTask,
 }: TaskCardProps) {
-  const [selected, setSelected] = React.useState<boolean>(
-    task?.selected || false
-  );
+  const [selected, setSelected] = React.useState<boolean>(false);
   const [dragging, setDragging] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [swipeDirection, setSwipeDirection] = React.useState('');
@@ -88,7 +87,8 @@ export default function TaskCard({
       className={classNames(
         'block w-full relative rounded outline-none focus:outline-none',
         {
-          'border-2 border-danger p-1': selected,
+          'border-2 border-white p-1': selected && task?.isFavorite,
+          'border-2 border-secondary p-1': selected && !task?.isFavorite,
         }
       )}
       onDoubleClick={() => setSelected((prev) => !prev)}
@@ -104,6 +104,20 @@ export default function TaskCard({
             'bg-primary text-white': task?.isFavorite,
           })}
         >
+          {selected && (
+            <div
+              className={classNames(
+                'flex justify-center items-center absolute top-0 left-0 z-20 w-8 h-8 rounded-t-l',
+                {
+                  'bg-white text-dark': task?.isFavorite,
+                  'bg-secondary text-dark': !task?.isFavorite,
+                }
+              )}
+            >
+              <CheckIcon />
+            </div>
+          )}
+
           <div className="flex flex-col-reverse md:flex-row items-center lg:justify-between mb-5">
             <TitleEditable
               task={task}
@@ -138,7 +152,7 @@ export default function TaskCard({
                 disabled={disabledCard}
                 icon
               >
-                <CheckIcon checked={task?.completed} />
+                <CheckSquareIcon checked={task?.completed} />
               </Button>
             </div>
           </div>

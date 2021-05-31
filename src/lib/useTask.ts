@@ -6,6 +6,7 @@ import Task from '../types/Task';
 interface UseTaskReturnType {
   loading: boolean;
   tasks: Task[];
+  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
   getTasks: () => Promise<Task[]>;
   getTask: (taskId: string) => Promise<Task>;
   createTask: (newTask: Task) => Promise<Task>;
@@ -133,6 +134,7 @@ export default function useTask(): UseTaskReturnType {
   return {
     loading,
     tasks,
+    setTasks,
     getTasks,
     getTask,
     createTask,

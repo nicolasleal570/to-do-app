@@ -10,12 +10,14 @@ interface InputProps
   id: string;
   color?: InputColorVariants;
   errorMessage?: string;
+  disabled?: boolean;
 }
 
 export default function Input({
   id,
   color = InputColorVariants.dark,
   errorMessage = '',
+  disabled = false,
   ...rest
 }: InputProps) {
   return (
@@ -32,6 +34,7 @@ export default function Input({
               color === 'dark',
             'bg-danger bg-opacity-50 placeholder-danger border border-danger':
               !!errorMessage,
+            'cursor-not-allowed': disabled,
           }
         )}
       />

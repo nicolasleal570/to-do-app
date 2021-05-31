@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import Task from '../../types/Task';
 import Input from './Input';
 import useForm from '../../lib/useForm';
-import useClickOutside from '../../lib/useClickOutside';
 
 interface DescriptionEditableProps {
   task: Task;
@@ -20,35 +19,18 @@ export default function DescriptionEditable({
   setLoading,
   onUpdateTask,
 }: DescriptionEditableProps) {
-  const [onSubmitUsed, setOnSubmitUsed] = React.useState(false);
   const [showDescriptionInput, setShowDescriptionInput] = React.useState(false);
-  const descriptionRef = React.useRef(null);
-
-  useClickOutside(
-    descriptionRef,
-    () => {
-      console.log('click outside');
-    },
-    onSubmitUsed
-  );
 
   const onUpdateDescription = async () => {
     setLoading(true);
     await onUpdateTask({ ...task, description });
-    setShowDescriptionInput(false);
     setLoading(false);
-    setOnSubmitUsed(false);
   };
 
   const { values, onChange, onSubmit } = useForm<Task>({
     initialState: { ...task },
     onSubmitCallback: onUpdateDescription,
   });
-
-  const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    setOnSubmitUsed(true);
-    onSubmit(e);
-  };
 
   const handleEnterDescription = () => setShowDescriptionInput(true);
 
@@ -61,12 +43,11 @@ export default function DescriptionEditable({
   const description = values?.description || '';
 
   return (
-    <form onSubmit={handleOnSubmit} className="w-full">
+    <form onSubmit={onSubmit} className="w-full">
       {showDescriptionInput ? (
         <Input
           id="description-field"
           name="description"
-          className="bg-red-400"
           value={description}
           onChange={onChange}
           disabled={disabled}
@@ -82,6 +63,7 @@ export default function DescriptionEditable({
               !task?.description && task?.isFavorite,
 
             'hover:bg-darkAccent hover:bg-opacity-10': !disabled,
+            'cursor-not-allowed': disabled,
           })}
           onClick={handleEnterDescription}
           disabled={disabled}

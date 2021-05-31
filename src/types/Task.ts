@@ -4,7 +4,6 @@ export default interface Task {
   description: string;
   isFavorite: boolean;
   completed: boolean;
-  selected?: boolean;
   createdAt: string;
   updatedAt: string;
 }

@@ -26,7 +26,6 @@ export default function TitleEditable({
   const onUpdateDescription = async (updatedTask: Task) => {
     setLoading(true);
     await onUpdateTask({ ...updatedTask });
-    setShowTitleInput(false);
     setLoading(false);
   };
 
@@ -64,6 +63,7 @@ export default function TitleEditable({
           className={classNames('block w-full text-left p-2 bg-transparent ', {
             'text-lightSecondary text-sm underline': !task?.title,
             'hover:bg-darkAccent hover:bg-opacity-10': !disabled,
+            'cursor-not-allowed': disabled,
           })}
           onClick={showInput}
           disabled={loading || disabled}

@@ -66,13 +66,6 @@ export default function ToDosPage() {
               handleChange={onChange}
             />
             <div className="w-full md:w-card mx-auto mt-16 overflow-hidden">
-              <button
-                type="button"
-                className="block text-white underline ml-auto mb-5"
-              >
-                Select All
-              </button>
-
               {tasks?.map((task) => (
                 <div className="mb-10" key={task?.id}>
                   <TaskCard
