@@ -50,7 +50,7 @@ const TaskCard = ({
   const moreOptions = () => console.log('click more options', task);
 
   const markAsDone = () => {
-    handleUpdate({ ...task, completed: true });
+    handleUpdate({ ...task, completed: !task?.completed });
   };
 
   const onDoubleClick = () => {
@@ -169,7 +169,7 @@ const TaskCard = ({
                     ? ButtonColorVariants.white
                     : ButtonColorVariants.primary
                 }
-                disabled={disabledCard}
+                disabled={selected || loading}
                 icon
               >
                 <CheckSquareIcon checked={task?.completed} />

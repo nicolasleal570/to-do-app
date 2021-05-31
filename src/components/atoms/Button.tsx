@@ -15,6 +15,7 @@ interface ButtonProps
   loading?: boolean;
   icon?: boolean;
   full?: boolean;
+  linkButton?: boolean;
 }
 
 export default function Button({
@@ -27,8 +28,37 @@ export default function Button({
   loading = false,
   icon = false,
   full = false,
+  linkButton = false,
   ...rest
 }: ButtonProps) {
+  if (linkButton) {
+    return (
+      <button
+        // eslint-disable-next-line react/button-has-type
+        type={type}
+        id={id}
+        disabled={disabled || loading}
+        data-testid={id}
+        className={classNames('underline outline-none focus:outline-none', {
+          'opacity-100 cursor-pointer': !disabled,
+          'opacity-50 cursor-not-allowed': disabled,
+          'text-base': size === ButtonSizeVariants.normal,
+          'text-sm': size === ButtonSizeVariants.small,
+          'text-primary': color === ButtonColorVariants.primary,
+          'text-dark': color === ButtonColorVariants.dark,
+          'text-white': color === ButtonColorVariants.white,
+          'text-danger': color === ButtonColorVariants.danger,
+          'text-info': color === ButtonColorVariants.info,
+          'text-info-dark': color === ButtonColorVariants.infoDark,
+          'w-full': full,
+        })}
+        {...rest}
+      >
+        {loading ? <span>Loading...</span> : children}
+      </button>
+    );
+  }
+
   if (icon) {
     return (
       <button
@@ -49,6 +79,8 @@ export default function Button({
             'bg-dark text-white': color === ButtonColorVariants.dark,
             'bg-white text-dark': color === ButtonColorVariants.white,
             'bg-danger text-white': color === ButtonColorVariants.danger,
+            'bg-info text-dark': color === ButtonColorVariants.info,
+            'bg-info-dark text-white': color === ButtonColorVariants.infoDark,
             'w-full': full,
           }
         )}
@@ -74,6 +106,8 @@ export default function Button({
         'bg-primary text-white': color === ButtonColorVariants.primary,
         'bg-dark text-white': color === ButtonColorVariants.dark,
         'bg-danger text-white': color === ButtonColorVariants.danger,
+        'bg-info text-dark': color === ButtonColorVariants.info,
+        'bg-info-dark text-white': color === ButtonColorVariants.infoDark,
         'w-full': full,
       })}
       {...rest}

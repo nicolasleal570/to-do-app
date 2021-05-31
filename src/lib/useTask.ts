@@ -12,6 +12,10 @@ interface UseTaskReturnType {
   updateTask: (task: Task) => Promise<Task>;
   deleteTask: (taskId: string) => Promise<void>;
   deleteManyTasks: (taskIds: string[]) => Promise<void>;
+  addManyTasksToFavorites: (
+    taskIds: string[],
+    addToFavorites?: boolean
+  ) => Promise<void>;
 }
 
 export default function useTask(): UseTaskReturnType {
@@ -129,6 +133,32 @@ export default function useTask(): UseTaskReturnType {
       }, 1000);
     });
 
+  const addManyTasksToFavorites = (
+    taskIds: string[],
+    addToFavorites = true
+  ): Promise<void> =>
+    new Promise<void>((resolve) => {
+      if (loading) return;
+
+      setLoading(true);
+
+      if (!taskIds?.length) {
+        return resolve();
+      }
+
+      const arr = tasks?.map((task) => {
+        if (taskIds.indexOf(task?.id) === -1) {
+          return task;
+        }
+        return { ...task, isFavorite: addToFavorites };
+      });
+
+      setTimeout(() => {
+        updateTasksOnUser(arr);
+        resolve();
+      }, 1000);
+    });
+
   useEffect(() => {
     const fetchTasks = async () => {
       const _tasks = await getTasks();
@@ -147,5 +177,6 @@ export default function useTask(): UseTaskReturnType {
     updateTask,
     deleteTask,
     deleteManyTasks,
+    addManyTasksToFavorites,
   };
 }

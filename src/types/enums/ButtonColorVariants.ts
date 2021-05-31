@@ -5,6 +5,8 @@ enum ButtonColorVariants {
   white = 'white',
   light = 'light',
   danger = 'danger',
+  info = 'info',
+  infoDark = 'infoDark',
 }
 
 export default ButtonColorVariants;

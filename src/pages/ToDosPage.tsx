@@ -1,6 +1,10 @@
 import React from 'react';
+import Button from '../components/atoms/Button';
+import ButtonColorVariants from '../types/enums/ButtonColorVariants';
 import Wrapper from '../components/atoms/Wrapper';
 import Navbar from '../components/molecules/Navbar';
+import TrashIcon from '../components/atoms/icons/TrashIcon';
+import HeartIcon from '../components/atoms/icons/HeartIcon';
 import EmptyTasksList from '../components/molecules/EmptyTasksList';
 import useForm from '../lib/useForm';
 import createTaskValidation from '../utils/createTaskValidation';
@@ -18,6 +22,7 @@ export default function ToDosPage() {
     updateTask,
     deleteTask,
     deleteManyTasks,
+    addManyTasksToFavorites,
   } = useTask();
   const [tasksSelected, setTasksSelected] = React.useState<boolean[]>([]);
   const [tasks, setTasks] = React.useState<Task[]>([]);
@@ -49,12 +54,33 @@ export default function ToDosPage() {
     tasksSelected.forEach((selected, idx) => {
       if (selected) {
         const task = tasks[idx];
-        console.log(task);
         ids.push(task.id);
       }
     });
     await deleteManyTasks(ids);
   };
+
+  const onAddSelectedTasksToFavorites =
+    (addToFavorites = true) =>
+    async () => {
+      const ids = [];
+      tasksSelected.forEach((selected, idx) => {
+        if (selected) {
+          const task = tasks[idx];
+          ids.push(task.id);
+        }
+      });
+      await addManyTasksToFavorites(ids, addToFavorites);
+    };
+
+  const onSelectAllTasks = () => {
+    setTasksSelected((prev) => [...prev.map((_) => true)]);
+  };
+
+  const onDeselectAllTasks = () => {
+    setTasksSelected((prev) => [...prev.map((_) => false)]);
+  };
+
   React.useEffect(() => {
     const sortedArr = [].concat(_tasks).sort((a, b) => {
       if (a?.completed === b?.completed) {
@@ -85,6 +111,8 @@ export default function ToDosPage() {
     return <Loader centeredOnScreen />;
   }
 
+  const someTasksAreSelected = tasksSelected?.some((value) => value === true);
+
   return (
     <>
       <Navbar />
@@ -100,14 +128,61 @@ export default function ToDosPage() {
               handleChange={onChange}
             />
 
+            {someTasksAreSelected && (
+              <div className="grid grid-cols-8 gap-4 w-full md:w-card mx-auto p-4 mt-16 mb-5 overflow-hidden bg-white">
+                <Button
+                  id="delete-selection-btn"
+                  onClick={onDeleteSelectedTasks}
+                  color={ButtonColorVariants.danger}
+                  disabled={tasksLoading}
+                  icon
+                >
+                  <TrashIcon />
+                </Button>
+                <Button
+                  id="add-selection-favorites-btn"
+                  onClick={onAddSelectedTasksToFavorites()}
+                  disabled={tasksLoading}
+                  icon
+                >
+                  <HeartIcon filled />
+                </Button>
+                <Button
+                  id="remove-selection-favorites-btn"
+                  onClick={onAddSelectedTasksToFavorites(false)}
+                  color={ButtonColorVariants.dark}
+                  disabled={tasksLoading}
+                  icon
+                >
+                  <HeartIcon />
+                </Button>
+              </div>
+            )}
+
             <div className="w-full md:w-card mx-auto mt-16 overflow-hidden">
-              <button
-                type="button"
-                className="text-white mb-10"
-                onClick={onDeleteSelectedTasks}
-              >
-                Delete All
-              </button>
+              <div className="mb-5">
+                {someTasksAreSelected ? (
+                  <Button
+                    id="delete-selection-btn"
+                    onClick={onDeselectAllTasks}
+                    color={ButtonColorVariants.white}
+                    disabled={tasksLoading}
+                    linkButton
+                  >
+                    Clear Selection
+                  </Button>
+                ) : (
+                  <Button
+                    id="delete-selection-btn"
+                    onClick={onSelectAllTasks}
+                    color={ButtonColorVariants.white}
+                    disabled={tasksLoading}
+                    linkButton
+                  >
+                    Select All
+                  </Button>
+                )}
+              </div>
 
               {tasks?.map((task, idx) => (
                 <div className="mb-10" key={task?.id}>

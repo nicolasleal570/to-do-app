@@ -28,8 +28,9 @@ module.exports = {
         darkAccent: '#475B7B',
         darkNavbar: '#181F2A',
         lightSecondary: '#A8A8A8',
-        danger: '#FF6262',
-        info: '#F1B170',
+        danger: '#dc3545',
+        info: '#20c997',
+        'info-dark': '#13795b',
       },
       spacing: {
         card: '560px',
