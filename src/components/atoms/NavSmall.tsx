@@ -3,10 +3,12 @@ import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import useViewport from '../../lib/useViewport';
 import MenuIcon from './icons/MenuIcon';
+import CloseIcon from './icons/CloseIcon';
 import Wrapper from './Wrapper';
 import Button from './Button';
 import ButtonSizeVariants from '../../types/enums/ButtonSizeVariants';
 import ButtonColorVariants from '../../types/enums/ButtonColorVariants';
+import useClickOutside from '../../lib/useClickOutside';
 
 interface NavLinkSmProps {
   display: string;
@@ -60,8 +62,13 @@ interface NavbarSmProps {
 export default function NavbarSm({ links, onLogoutCallback }: NavbarSmProps) {
   const { viewport } = useViewport();
   const [isOpen, setIsOpen] = React.useState(false);
+  const linksRef = React.useRef<HTMLUListElement>(null);
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
+
+  useClickOutside(linksRef, () => {
+    setIsOpen(false);
+  });
 
   React.useEffect(() => {
     const originalStyle = window.getComputedStyle(document.body).overflow;
@@ -82,7 +89,7 @@ export default function NavbarSm({ links, onLogoutCallback }: NavbarSmProps) {
   return (
     <>
       <nav
-        className={classNames('bg-darkNavbar absolute w-full', {
+        className={classNames('bg-darkNavbar absolute w-full z-50', {
           'h-screen bg-opacity-70': isOpen,
         })}
       >
@@ -95,13 +102,13 @@ export default function NavbarSm({ links, onLogoutCallback }: NavbarSmProps) {
             </div>
 
             <Button id="menu-id" onClick={toggleMenu} icon>
-              <MenuIcon />
+              {isOpen ? <CloseIcon /> : <MenuIcon />}
             </Button>
           </div>
         </Wrapper>
 
         {isOpen && (
-          <ul className="h-full text-white pt-10">
+          <ul ref={linksRef} className="bg-darkNavbar text-white py-10">
             {links.map((link) => (
               <NavLinkSm key={link?.url} {...link} />
             ))}

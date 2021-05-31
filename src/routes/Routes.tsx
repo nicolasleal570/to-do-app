@@ -5,8 +5,9 @@ import Loader from '../components/atoms/Loader';
 
 const WelcomePage = React.lazy(() => import('../pages/WelcomePage'));
 const ToDosPage = React.lazy(() => import('../pages/ToDosPage'));
-
-const ToDoFavoritesPage = () => <p>TO-DO FAVORITES LIST </p>;
+const ToDosFavoritesPage = React.lazy(
+  () => import('../pages/ToDosFavoritesPage')
+);
 
 export default function Routes() {
   return (
@@ -16,7 +17,7 @@ export default function Routes() {
           <PrivateRoute path="/to-do" component={ToDosPage} exact />
           <PrivateRoute
             path="/to-do/favorites"
-            component={ToDoFavoritesPage}
+            component={ToDosFavoritesPage}
             exact
           />
           <Route path="/" component={WelcomePage} exact />

@@ -54,7 +54,7 @@ export default function ToolsBar({
     };
 
   return someTasksAreSelected ? (
-    <div className="grid grid-cols-2 md:grid-cols-8 gap-2 md:gap-4 w-full md:w-card mx-auto p-2 md:p-4 mt-4 mb-5 overflow-hidden bg-white">
+    <div className="grid grid-cols-2 md:grid-cols-8 gap-2 md:gap-4 w-full md:w-card mx-auto p-2 md:p-4 mt-4 mb-5 overflow-hidden bg-white rounded">
       <Button
         id="delete-selection-btn"
         onClick={onDeleteSelectedTasks}

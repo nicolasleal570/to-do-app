@@ -21,7 +21,9 @@ interface UseTaskReturnType {
 export default function useTask(): UseTaskReturnType {
   const { user, loading: userLoading, updateUser } = useUser();
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(userLoading);
+
+  console.log({ tasks, loading, userLoading });
 
   const updateTasksOnUser = async (_tasks: Task[]) => {
     if (userLoading) return;
@@ -44,120 +46,138 @@ export default function useTask(): UseTaskReturnType {
       }, 1000);
     });
 
-  const createTask = (newTask: Task): Promise<Task> =>
-    new Promise<Task>((resolve) => {
-      if (loading) return;
+  const createTask = async (newTask: Task): Promise<Task> => {
+    if (loading) return;
 
-      setLoading(true);
+    setLoading(true);
 
-      const task = { ...newTask, id: uuid() };
+    const task = { ...newTask, id: uuid() };
+    await updateTasksOnUser([task, ...tasks]);
 
+    return new Promise<Task>((resolve) => {
       setTimeout(() => {
-        updateTasksOnUser([task, ...tasks]);
         resolve(task);
       }, 1000);
     });
+  };
+  const updateTask = async (newTaskData: Task): Promise<Task> => {
+    if (loading) return;
 
-  const updateTask = (newTaskData: Task): Promise<Task> =>
-    new Promise<Task>((resolve, reject) => {
-      if (loading) return;
+    setLoading(true);
 
-      setLoading(true);
+    const taskToUpdateIndex = tasks?.findIndex((t) => t.id === newTaskData?.id);
 
-      const taskToUpdateIndex = tasks?.findIndex(
-        (t) => t.id === newTaskData?.id
-      );
-
-      if (taskToUpdateIndex < 0) {
+    if (taskToUpdateIndex < 0) {
+      return new Promise((_, reject) => {
         setTimeout(() => {
           reject();
           setLoading(false);
         }, 1000);
+      });
+    }
 
-        return null;
-      }
+    const updatedTask: Task = {
+      ...tasks[taskToUpdateIndex],
+      ...newTaskData,
+      updatedAt: new Date().toISOString(),
+    };
 
-      const updatedTask: Task = {
-        ...tasks[taskToUpdateIndex],
-        ...newTaskData,
-        updatedAt: new Date().toISOString(),
-      };
+    const newArr = [].concat(tasks);
+    newArr[taskToUpdateIndex] = updatedTask;
 
-      const newArr = [].concat(tasks);
-      newArr[taskToUpdateIndex] = updatedTask;
+    await updateTasksOnUser(newArr);
 
+    return new Promise<Task>((resolve) => {
       setTimeout(() => {
-        updateTasksOnUser(newArr);
         resolve(updatedTask);
       }, 1000);
     });
+  };
 
-  const deleteTask = (taskId: string): Promise<void> =>
-    new Promise<void>((resolve, reject) => {
-      if (loading) return;
+  const deleteTask = async (taskId: string): Promise<void> => {
+    if (loading) return;
 
-      setLoading(true);
+    setLoading(true);
 
-      const taskToDelete = tasks?.find((t) => t.id === taskId) || null;
+    const taskToDelete = tasks?.find((t) => t.id === taskId) || null;
 
-      if (!taskToDelete) {
+    if (!taskToDelete) {
+      return new Promise((_, reject) => {
         setTimeout(() => {
           reject();
           setLoading(false);
         }, 1000);
+      });
+    }
 
-        return;
-      }
+    await updateTasksOnUser([
+      ...tasks.filter((t) => t?.id !== taskToDelete?.id),
+    ]);
 
+    return new Promise<void>((resolve) => {
       setTimeout(() => {
-        updateTasksOnUser([...tasks.filter((t) => t?.id !== taskToDelete?.id)]);
         resolve();
       }, 1000);
     });
+  };
 
-  const deleteManyTasks = (taskIds: string[]): Promise<void> =>
-    new Promise<void>((resolve) => {
-      if (loading) return;
+  const deleteManyTasks = async (taskIds: string[]): Promise<void> => {
+    if (loading) return;
 
-      setLoading(true);
+    setLoading(true);
 
-      if (!taskIds?.length) {
-        return resolve();
-      }
+    if (!taskIds?.length) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve();
+          setLoading(false);
+        }, 1000);
+      });
+    }
 
-      const arr = tasks?.filter((task) => taskIds.indexOf(task?.id) === -1);
+    const arr = tasks?.filter((task) => taskIds.indexOf(task?.id) === -1);
 
+    await updateTasksOnUser(arr);
+
+    return new Promise<void>((resolve) => {
       setTimeout(() => {
-        updateTasksOnUser(arr);
         resolve();
       }, 1000);
     });
+  };
 
-  const addManyTasksToFavorites = (
+  const addManyTasksToFavorites = async (
     taskIds: string[],
     addToFavorites = true
-  ): Promise<void> =>
-    new Promise<void>((resolve) => {
-      if (loading) return;
+  ): Promise<void> => {
+    if (loading) return;
 
-      setLoading(true);
+    setLoading(true);
 
-      if (!taskIds?.length) {
-        return resolve();
-      }
-
-      const arr = tasks?.map((task) => {
-        if (taskIds.indexOf(task?.id) === -1) {
-          return task;
-        }
-        return { ...task, isFavorite: addToFavorites };
+    if (!taskIds?.length) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve();
+          setLoading(false);
+        }, 1000);
       });
+    }
 
+    const arr = tasks?.map((task) => {
+      if (taskIds.indexOf(task?.id) === -1) {
+        return task;
+      }
+      return { ...task, isFavorite: addToFavorites };
+    });
+
+    await updateTasksOnUser(arr);
+
+    return new Promise<void>((resolve) => {
       setTimeout(() => {
-        updateTasksOnUser(arr);
         resolve();
       }, 1000);
     });
+  };
 
   useEffect(() => {
     const fetchTasks = async () => {

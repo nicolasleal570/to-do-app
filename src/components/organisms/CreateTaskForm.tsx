@@ -6,6 +6,7 @@ import getValidationError from '../../utils/getValidationError';
 import useViewport from '../../lib/useViewport';
 import ValidationError from '../../types/ValidationError';
 import Task from '../../types/Task';
+import useQuery from '../../lib/useQuery';
 
 interface CreateTaskFormProps {
   disabled: boolean;
@@ -24,6 +25,7 @@ export default function CreateTaskForm({
   handleSubmit,
   handleChange,
 }: CreateTaskFormProps) {
+  const query = useQuery();
   const { viewport } = useViewport();
 
   return (
@@ -40,6 +42,7 @@ export default function CreateTaskForm({
         value={values?.title}
         autoComplete="off"
         disabled={loading}
+        autoFocus={!!query?.get('action')}
       />
 
       <div className="mt-4 md:mt-0 md:ml-4 w-full md:w-28">
