@@ -40,7 +40,7 @@ export default function TitleEditable({
   const handleEnterTitle = () => setEditing(true);
 
   const onBlurInput = async () => {
-    if (task?.description !== values?.description && !loading) {
+    if (task?.title !== values?.title && !loading) {
       onUpdateTitle();
     } else {
       setEditing(false);

@@ -31,14 +31,30 @@ export default function TaskCard({
   const [loading, setLoading] = React.useState(false);
   const [swipeDirection, setSwipeDirection] = React.useState('');
 
-  const handleFavorite = async () => {
+  const disabledCard = selected || loading || task?.completed;
+
+  const handleUpdate = async (updatedTask: Task) => {
     setLoading(true);
-    await onUpdateTask({ ...task, isFavorite: !task?.isFavorite });
-    setSwipeDirection('');
+    await onUpdateTask({ ...updatedTask });
     setLoading(false);
   };
 
-  const handleOnClick = () => console.log('click', task);
+  const handleFavorite = async () => {
+    await handleUpdate({ ...task, isFavorite: !task?.isFavorite });
+    setSwipeDirection('');
+  };
+
+  const moreOptions = () => console.log('click more options', task);
+
+  const markAsDone = () => {
+    handleUpdate({ ...task, completed: true });
+  };
+
+  const onDoubleClick = () => {
+    if (!loading && !task?.completed) {
+      setSelected((prev) => !prev);
+    }
+  };
 
   const onDragLeft = async () => {
     try {
@@ -52,7 +68,6 @@ export default function TaskCard({
     try {
       setLoading(true);
       await onDeleteTask(task?.id);
-      setLoading(false);
     } catch (err) {
       console.log(err);
     }
@@ -82,8 +97,6 @@ export default function TaskCard({
     }
   }, [dragging, loading, swipeDirection]);
 
-  const disabledCard = selected || loading;
-
   return (
     <div
       className={classNames(
@@ -93,7 +106,7 @@ export default function TaskCard({
           'border-2 border-secondary p-1': selected && !task?.isFavorite,
         }
       )}
-      onDoubleClick={() => setSelected((prev) => !prev)}
+      onDoubleClick={onDoubleClick}
     >
       <DraggableContainer
         disabled={disabledCard || editDescription}
@@ -134,7 +147,7 @@ export default function TaskCard({
             <div className="flex ml-auto">
               <Button
                 id="dots-task"
-                onClick={handleOnClick}
+                onClick={moreOptions}
                 color={
                   !task?.isFavorite
                     ? ButtonColorVariants.white
@@ -147,7 +160,7 @@ export default function TaskCard({
               </Button>
               <Button
                 id="check-task"
-                onClick={handleOnClick}
+                onClick={markAsDone}
                 color={
                   !task?.isFavorite
                     ? ButtonColorVariants.white
