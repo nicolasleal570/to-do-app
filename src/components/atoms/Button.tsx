@@ -16,6 +16,7 @@ interface ButtonProps
   icon?: boolean;
   full?: boolean;
   linkButton?: boolean;
+  borders?: boolean;
 }
 
 export default function Button({
@@ -29,6 +30,7 @@ export default function Button({
   icon = false,
   full = false,
   linkButton = false,
+  borders = false,
   ...rest
 }: ButtonProps) {
   if (linkButton) {
@@ -82,6 +84,7 @@ export default function Button({
             'bg-info text-dark': color === ButtonColorVariants.info,
             'bg-info-dark text-white': color === ButtonColorVariants.infoDark,
             'w-full': full,
+            'border border-dark': borders,
           }
         )}
         {...rest}
@@ -105,6 +108,8 @@ export default function Button({
         'px-5 py-2 rounded-sm text-sm': size === ButtonSizeVariants.small,
         'bg-primary text-white': color === ButtonColorVariants.primary,
         'bg-dark text-white': color === ButtonColorVariants.dark,
+        'bg-white text-dark border border-grey-100':
+          color === ButtonColorVariants.white,
         'bg-danger text-white': color === ButtonColorVariants.danger,
         'bg-info text-dark': color === ButtonColorVariants.info,
         'bg-info-dark text-white': color === ButtonColorVariants.infoDark,

@@ -7,7 +7,6 @@ import ButtonColorVariants from '../../types/enums/ButtonColorVariants';
 import HeartIcon from './icons/HeartIcon';
 import CheckIcon from './icons/CheckIcon';
 import CheckSquareIcon from './icons/CheckSquareIcon';
-import TrashIcon from './icons/TrashIcon';
 import DotsHorizontalIcon from './icons/DotsHorizontalIcon';
 import Task from '../../types/Task';
 import DescriptionEditable from './DescriptionEditable';
@@ -30,9 +29,7 @@ const TaskCard = ({
 }: TaskCardProps) => {
   const [editDescription, setEditDescription] = React.useState<boolean>(false);
   const [editTitle, setEditTitle] = React.useState<boolean>(false);
-  const [dragging, setDragging] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const [swipeDirection, setSwipeDirection] = React.useState('');
 
   const disabledCard = selected || loading || task?.completed;
 
@@ -42,10 +39,8 @@ const TaskCard = ({
     setLoading(false);
   };
 
-  const handleFavorite = async () => {
-    await handleUpdate({ ...task, isFavorite: !task?.isFavorite });
-    setSwipeDirection('');
-  };
+  const handleFavorite = async () =>
+    handleUpdate({ ...task, isFavorite: !task?.isFavorite });
 
   const moreOptions = () => console.log('click more options', task);
 
@@ -59,46 +54,22 @@ const TaskCard = ({
     }
   };
 
-  const onDragLeft = async () => {
+  const onDragLeft = async (): Promise<void> => {
     try {
-      handleFavorite();
+      return await handleFavorite();
     } catch (err) {
       console.log(err);
     }
   };
 
-  const onDragRigth = async () => {
+  const onDragRigth = async (): Promise<void> => {
     try {
       setLoading(true);
-      await onDeleteTask(task?.id);
+      return await onDeleteTask(task?.id);
     } catch (err) {
       console.log(err);
     }
   };
-
-  const onDragEnd = () => setDragging(false);
-
-  const onDragStart = (event, info) => {
-    if (loading) return;
-
-    setDragging(true);
-    if (info.delta.x > 0) {
-      setSwipeDirection('right');
-    } else if (info.delta.x < 0) {
-      setSwipeDirection('left');
-    }
-  };
-
-  React.useEffect(() => {
-    if (!dragging && !loading) {
-      if (swipeDirection === 'left') {
-        onDragLeft();
-      } else if (swipeDirection === 'right') {
-        onDragRigth();
-      }
-      setSwipeDirection('');
-    }
-  }, [dragging, loading, swipeDirection]);
 
   return (
     <div
@@ -113,8 +84,9 @@ const TaskCard = ({
     >
       <DraggableContainer
         disabled={disabledCard || editDescription}
-        onDragStart={onDragStart}
-        onDragEnd={onDragEnd}
+        isFavoriteTask={task?.isFavorite}
+        onDragRight={onDragRigth}
+        onDragLeft={onDragLeft}
       >
         <div
           className={classNames('w-full rounded-t p-4', {
@@ -220,27 +192,6 @@ const TaskCard = ({
           </Button>
         </div>
       </DraggableContainer>
-
-      {!disabledCard && !editDescription && (
-        <div
-          className={classNames(
-            'flex items-center justify-between  absolute w-full h-full top-0 left-0 z-0 rounded'
-          )}
-        >
-          <div className="flex-1 bg-danger text-white w-full h-full p-11 flex items-center justify-start rounded-l">
-            <TrashIcon width="48" height="48" strokeWidth="1" />
-          </div>
-
-          <div className="flex-1 bg-info text-dark w-full h-full p-11 flex items-center justify-end rounded-r">
-            <HeartIcon
-              width="48"
-              height="48"
-              strokeWidth="1"
-              filled={task?.isFavorite}
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 };

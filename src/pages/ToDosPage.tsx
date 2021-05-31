@@ -140,21 +140,23 @@ export default function ToDosPage() {
                   <TrashIcon />
                 </Button>
                 <Button
+                  id="remove-selection-favorites-btn"
+                  onClick={onAddSelectedTasksToFavorites(false)}
+                  color={ButtonColorVariants.white}
+                  disabled={tasksLoading}
+                  icon
+                  borders
+                >
+                  <HeartIcon />
+                </Button>
+
+                <Button
                   id="add-selection-favorites-btn"
                   onClick={onAddSelectedTasksToFavorites()}
                   disabled={tasksLoading}
                   icon
                 >
                   <HeartIcon filled />
-                </Button>
-                <Button
-                  id="remove-selection-favorites-btn"
-                  onClick={onAddSelectedTasksToFavorites(false)}
-                  color={ButtonColorVariants.dark}
-                  disabled={tasksLoading}
-                  icon
-                >
-                  <HeartIcon />
                 </Button>
               </div>
             )}
