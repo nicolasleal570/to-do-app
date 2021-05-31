@@ -2,10 +2,10 @@ import React from 'react';
 import classNames from 'classnames';
 import InputColorVariants from '../../types/enums/InputColorVariants';
 
-interface InputProps
+interface TextareaProps
   extends React.DetailedHTMLProps<
-    React.InputHTMLAttributes<HTMLInputElement>,
-    HTMLInputElement
+    React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+    HTMLTextAreaElement
   > {
   id: string;
   color?: InputColorVariants;
@@ -14,22 +14,21 @@ interface InputProps
   useTextArea?: boolean;
 }
 
-export default function Input({
+export default function Textarea({
   id,
   color = InputColorVariants.dark,
   errorMessage = '',
   disabled = false,
   ...rest
-}: InputProps) {
+}: TextareaProps) {
   return (
     <div className="block w-full">
-      <input
+      <textarea
         {...rest}
-        type="text"
         id={id}
         data-testid={id}
         className={classNames(
-          'block w-full py-2 px-3 md:py-3 md:px-5 rounded text-sm md:text-base',
+          'block min-w-full max-w-full py-2 px-3 md:py-3 md:px-5 rounded text-sm md:text-base',
           {
             'border-0 bg-darkAccent text-white placeholder-lightSecondary':
               color === 'dark',

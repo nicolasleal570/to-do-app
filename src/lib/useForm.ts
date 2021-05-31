@@ -10,7 +10,7 @@ interface UseFormProps<T> {
 interface UseFormReturnType<T> {
   values: T;
   errors: Array<ValidationError>;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   onClear: () => void;
 }
@@ -23,7 +23,9 @@ export default function useForm<T>({
   const [errors, setErrors] = useState<ValidationError[]>([]);
   const [values, setValues] = useState<T>(initialState);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name: field, value } = e.target;
     setErrors((prev) => prev.filter((i) => i.inputName !== field));
     setValues((prev) => ({ ...prev, [field]: value }));

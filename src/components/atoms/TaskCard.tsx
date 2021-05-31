@@ -24,6 +24,8 @@ export default function TaskCard({
   onUpdateTask,
   onDeleteTask,
 }: TaskCardProps) {
+  const [editDescription, setEditDescription] = React.useState<boolean>(false);
+  const [editTitle, setEditTitle] = React.useState<boolean>(false);
   const [selected, setSelected] = React.useState<boolean>(false);
   const [dragging, setDragging] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -94,7 +96,7 @@ export default function TaskCard({
       onDoubleClick={() => setSelected((prev) => !prev)}
     >
       <DraggableContainer
-        disabled={disabledCard}
+        disabled={disabledCard || editDescription}
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}
       >
@@ -122,9 +124,11 @@ export default function TaskCard({
             <TitleEditable
               task={task}
               onUpdateTask={onUpdateTask}
+              editing={editTitle}
               loading={loading}
               disabled={disabledCard}
               setLoading={setLoading}
+              setEditing={setEditTitle}
             />
 
             <div className="flex ml-auto">
@@ -159,9 +163,11 @@ export default function TaskCard({
           <DescriptionEditable
             task={task}
             onUpdateTask={onUpdateTask}
+            editing={editDescription}
             loading={loading}
             disabled={disabledCard}
             setLoading={setLoading}
+            setEditing={setEditDescription}
           />
         </div>
 
@@ -199,7 +205,7 @@ export default function TaskCard({
         </div>
       </DraggableContainer>
 
-      {!selected && !loading && (
+      {!disabledCard && !editDescription && (
         <div
           className={classNames(
             'flex items-center justify-between  absolute w-full h-full top-0 left-0 z-0 rounded'

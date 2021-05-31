@@ -10,7 +10,9 @@ interface TitleEditableProps {
   task: Task;
   loading: boolean;
   disabled: boolean;
+  editing: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setEditing: React.Dispatch<React.SetStateAction<boolean>>;
   onUpdateTask: (newTask: Task) => Promise<Task>;
 }
 
@@ -18,28 +20,36 @@ export default function TitleEditable({
   task,
   loading,
   disabled,
+  editing,
   setLoading,
+  setEditing,
   onUpdateTask,
 }: TitleEditableProps) {
-  const [showTitleInput, setShowTitleInput] = React.useState(false);
-
-  const onUpdateDescription = async (updatedTask: Task) => {
+  const onUpdateTitle = async () => {
     setLoading(true);
-    await onUpdateTask({ ...updatedTask });
+    await onUpdateTask({ ...task, title: values?.title });
     setLoading(false);
   };
 
   const { values, onChange, onSubmit, errors } = useForm<Task>({
     initialState: { ...task },
-    onSubmitCallback: onUpdateDescription,
+    onSubmitCallback: onUpdateTitle,
     validationFunction: updateTaskValidation,
   });
 
-  const showInput = () => setShowTitleInput(true);
+  const handleEnterTitle = () => setEditing(true);
+
+  const onBlurInput = async () => {
+    if (task?.description !== values?.description && !loading) {
+      onUpdateTitle();
+    } else {
+      setEditing(false);
+    }
+  };
 
   React.useEffect(() => {
     if (loading) {
-      setShowTitleInput(false);
+      setEditing(false);
     }
   }, [loading]);
 
@@ -47,14 +57,15 @@ export default function TitleEditable({
 
   return (
     <form onSubmit={onSubmit} className="w-full">
-      {showTitleInput ? (
+      {editing ? (
         <Input
           id="title-field"
           name="title"
           value={title}
+          disabled={disabled}
           errorMessage={getValidationError(errors, 'title')}
           onChange={onChange}
-          disabled={disabled}
+          onBlur={onBlurInput}
           autoFocus
         />
       ) : (
@@ -65,7 +76,7 @@ export default function TitleEditable({
             'hover:bg-darkAccent hover:bg-opacity-10': !disabled,
             'cursor-not-allowed': disabled,
           })}
-          onClick={showInput}
+          onClick={handleEnterTitle}
           disabled={loading || disabled}
         >
           {task?.title ? (

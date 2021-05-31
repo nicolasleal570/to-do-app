@@ -1,14 +1,16 @@
 import React from 'react';
 import classNames from 'classnames';
 import Task from '../../types/Task';
-import Input from './Input';
+import Textarea from './Textarea';
 import useForm from '../../lib/useForm';
 
 interface DescriptionEditableProps {
   task: Task;
   loading: boolean;
   disabled: boolean;
+  editing: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setEditing: React.Dispatch<React.SetStateAction<boolean>>;
   onUpdateTask: (newTask: Task) => Promise<Task>;
 }
 
@@ -16,14 +18,14 @@ export default function DescriptionEditable({
   task,
   loading,
   disabled,
+  editing,
   setLoading,
+  setEditing,
   onUpdateTask,
 }: DescriptionEditableProps) {
-  const [showDescriptionInput, setShowDescriptionInput] = React.useState(false);
-
   const onUpdateDescription = async () => {
     setLoading(true);
-    await onUpdateTask({ ...task, description });
+    await onUpdateTask({ ...task, description: values?.description });
     setLoading(false);
   };
 
@@ -32,11 +34,19 @@ export default function DescriptionEditable({
     onSubmitCallback: onUpdateDescription,
   });
 
-  const handleEnterDescription = () => setShowDescriptionInput(true);
+  const handleEnterDescription = () => setEditing(true);
+
+  const onBlurInput = async () => {
+    if (task?.description !== values?.description && !loading) {
+      onUpdateDescription();
+    } else {
+      setEditing(false);
+    }
+  };
 
   React.useEffect(() => {
     if (loading) {
-      setShowDescriptionInput(false);
+      setEditing(false);
     }
   }, [loading]);
 
@@ -44,13 +54,15 @@ export default function DescriptionEditable({
 
   return (
     <form onSubmit={onSubmit} className="w-full">
-      {showDescriptionInput ? (
-        <Input
+      {editing ? (
+        <Textarea
           id="description-field"
           name="description"
+          rows={7}
           value={description}
-          onChange={onChange}
           disabled={disabled}
+          onChange={onChange}
+          onBlur={onBlurInput}
           autoFocus
         />
       ) : (
