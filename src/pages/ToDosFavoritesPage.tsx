@@ -59,6 +59,7 @@ export default function ToDosFavoritesPage() {
       <Wrapper>
         <ToDoList
           tasks={tasks}
+          completedTasks={[]}
           tasksLoading={hideCreateTaskForm}
           showEmptyState={!tasks?.length}
           updateTask={updateTask}
