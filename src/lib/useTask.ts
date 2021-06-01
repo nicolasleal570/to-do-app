@@ -221,6 +221,7 @@ export default function useTask(): UseTaskReturnType {
     };
 
     fetchTasks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {

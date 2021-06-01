@@ -48,6 +48,7 @@ export default function DescriptionEditable({
     if (loading) {
       setEditing(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
   const description = values?.description || '';

@@ -51,6 +51,7 @@ export default function TitleEditable({
     if (loading) {
       setEditing(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
   const title = values?.title || '';

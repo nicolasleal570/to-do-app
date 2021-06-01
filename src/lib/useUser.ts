@@ -30,6 +30,7 @@ export default function useUser(): UseUserReturnType {
     }, 1000);
 
     return () => clearTimeout(timeout.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

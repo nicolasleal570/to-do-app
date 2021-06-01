@@ -41,6 +41,7 @@ export default function useViewport(): UseViewportReturnType {
   window.onresize = onResize;
   useEffect(() => {
     onResize();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { viewport };

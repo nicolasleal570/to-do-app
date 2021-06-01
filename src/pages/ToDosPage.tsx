@@ -76,6 +76,7 @@ export default function ToDosPage() {
     if (!tasksLoading && !query?.get('action')) {
       setHideCreateTaskForm(!tasks?.length);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tasks, tasksLoading]);
 
   if (tasksLoading && !tasks?.length) {

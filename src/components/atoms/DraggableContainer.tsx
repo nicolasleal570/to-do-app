@@ -61,6 +61,7 @@ export default function DraggableContainer({
 
       handlePromise();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setDirection, direction, finishedAnimation]);
 
   if (disabled) {

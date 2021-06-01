@@ -2,6 +2,7 @@
   "name": "todo-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/",
   "dependencies": {
     "@craco/craco": "^6.1.2",
     "classnames": "^2.3.1",
@@ -87,11 +88,7 @@
     }
   },
   "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
+    "production": [">0.2%", "not dead", "not op_mini all"],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
@@ -101,9 +98,7 @@
   "eslintConfig": {
     "overrides": [
       {
-        "files": [
-          "**/*.stories.*"
-        ],
+        "files": ["**/*.stories.*"],
         "rules": {
           "import/no-anonymous-default-export": "off"
         }
