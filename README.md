@@ -26,7 +26,7 @@ Esta es una simple apliación donde puedes escribir tus tareas con un título, u
 
 ## Ejecutar el proyecto
 
-Puedes visitar el entorno de producción visitando [Link](https://60b62642df5b8c00072e39ad--loving-mccarthy-8a9fd9.netlify.app/)
+Puedes visitar el entorno de producción visitando [Link](https://60b62a353433a9000989aec7--loving-mccarthy-8a9fd9.netlify.app/)
 
 Pero si se quiere ejecuta el entorno de desarrollo, primero debes descargarlo utilizando git: 
 
