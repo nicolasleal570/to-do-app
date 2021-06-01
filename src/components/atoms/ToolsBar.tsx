@@ -5,6 +5,7 @@ import ButtonColorVariants from '../../types/enums/ButtonColorVariants';
 import Task from '../../types/Task';
 import TrashIcon from './icons/TrashIcon';
 import HeartIcon from './icons/HeartIcon';
+import CheckSquareIcon from './icons/CheckSquareIcon';
 import useViewport, { UseViewportSizeVariants } from '../../lib/useViewport';
 import ButtonSizeVariants from '../../types/enums/ButtonSizeVariants';
 
@@ -19,6 +20,10 @@ interface ToolsBarProps {
     taskIds: string[],
     addToFavorites?: boolean
   ) => Promise<void>;
+  markManyTasksAsDone: (
+    taskIds: string[],
+    addToFavorites?: boolean
+  ) => Promise<void>;
 }
 
 export default function ToolsBar({
@@ -29,6 +34,7 @@ export default function ToolsBar({
   tasksSelected,
   deleteManyTasks,
   addManyTasksToFavorites,
+  markManyTasksAsDone,
 }: ToolsBarProps) {
   const { viewport } = useViewport();
 
@@ -56,10 +62,23 @@ export default function ToolsBar({
       await addManyTasksToFavorites(ids, addToFavorites);
     };
 
+  const onMarkAsDoneSelectedTasks =
+    (completed = true) =>
+    async () => {
+      const ids = [];
+      tasksSelected.forEach((selected, idx) => {
+        if (selected) {
+          const task = tasks[idx];
+          ids.push(task.id);
+        }
+      });
+      await markManyTasksAsDone(ids, completed);
+    };
+
   return someTasksAreSelected ? (
     <div
       className={classNames(
-        'grid grid-cols-2 md:grid-cols-8 gap-2 md:gap-4 w-full md:w-card mx-auto p-2 md:p-4 mt-4 mb-5 overflow-hidden  rounded',
+        'grid grid-cols-6 md:grid-cols-8 gap-2 md:gap-4 w-full md:w-card mx-auto p-2 md:p-4 mt-4 mb-5 overflow-hidden  rounded',
         {
           'bg-white': !isSticky,
           'bg-darkNavbar': isSticky,
@@ -80,12 +99,16 @@ export default function ToolsBar({
       >
         <TrashIcon />
       </Button>
-      <div className="block md:hidden p-1" />
       <Button
         id="remove-selection-favorites-btn"
         onClick={onAddSelectedTasksToFavorites(false)}
         color={ButtonColorVariants.white}
         disabled={tasksLoading}
+        size={
+          viewport !== UseViewportSizeVariants.sm
+            ? ButtonSizeVariants.normal
+            : ButtonSizeVariants.small
+        }
         icon
         borders
       >
@@ -97,10 +120,47 @@ export default function ToolsBar({
         onClick={onAddSelectedTasksToFavorites(true)}
         color={ButtonColorVariants.white}
         disabled={tasksLoading}
+        size={
+          viewport !== UseViewportSizeVariants.sm
+            ? ButtonSizeVariants.normal
+            : ButtonSizeVariants.small
+        }
         icon
         borders
       >
         <HeartIcon filled />
+      </Button>
+
+      <Button
+        id="mark-as-not-done-btn"
+        onClick={onMarkAsDoneSelectedTasks(false)}
+        color={ButtonColorVariants.white}
+        disabled={tasksLoading}
+        size={
+          viewport !== UseViewportSizeVariants.sm
+            ? ButtonSizeVariants.normal
+            : ButtonSizeVariants.small
+        }
+        icon
+        borders
+      >
+        <CheckSquareIcon />
+      </Button>
+
+      <Button
+        id="mark-as-done-btn"
+        onClick={onMarkAsDoneSelectedTasks(true)}
+        color={ButtonColorVariants.white}
+        disabled={tasksLoading}
+        size={
+          viewport !== UseViewportSizeVariants.sm
+            ? ButtonSizeVariants.normal
+            : ButtonSizeVariants.small
+        }
+        icon
+        borders
+      >
+        <CheckSquareIcon checked />
       </Button>
     </div>
   ) : null;

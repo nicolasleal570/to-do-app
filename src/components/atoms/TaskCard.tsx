@@ -6,16 +6,15 @@ import Button from './Button';
 import ButtonColorVariants from '../../types/enums/ButtonColorVariants';
 import HeartIcon from './icons/HeartIcon';
 import CheckIcon from './icons/CheckIcon';
-import CheckSquareIcon from './icons/CheckSquareIcon';
-import DotsHorizontalIcon from './icons/DotsHorizontalIcon';
 import Task from '../../types/Task';
 import DescriptionEditable from './DescriptionEditable';
 import TitleEditable from './TitleEditable';
+import TaskCardOptions from './TaskCardOptions';
 
 interface TaskCardProps {
   task: Task;
   selected: boolean;
-  setSelected: (selected: boolean) => void;
+  setSelected?: (selected: boolean) => void;
   onUpdateTask: (newTask: Task) => Promise<Task>;
   onDeleteTask: (taskId: string) => Promise<void>;
 }
@@ -42,13 +41,9 @@ const TaskCard = ({
   const handleFavorite = async () =>
     handleUpdate({ ...task, isFavorite: !task?.isFavorite });
 
-  const moreOptions = () => console.log('click more options', task);
+  const onSelect = () => {
+    if (!setSelected) return;
 
-  const markAsDone = () => {
-    handleUpdate({ ...task, completed: !task?.completed });
-  };
-
-  const onDoubleClick = () => {
     if (!loading && !task?.completed) {
       setSelected(!selected);
     }
@@ -80,7 +75,7 @@ const TaskCard = ({
           'border-2 border-secondary p-1': selected && !task?.isFavorite,
         }
       )}
-      onDoubleClick={onDoubleClick}
+      onDoubleClick={onSelect}
     >
       <DraggableContainer
         disabled={disabledCard || editDescription}
@@ -95,7 +90,9 @@ const TaskCard = ({
           })}
         >
           {selected && (
-            <div
+            <button
+              type="button"
+              onClick={onSelect}
               className={classNames(
                 'flex justify-center items-center absolute top-0 left-0 z-20 w-8 h-8 rounded-t-l',
                 {
@@ -105,7 +102,7 @@ const TaskCard = ({
               )}
             >
               <CheckIcon />
-            </div>
+            </button>
           )}
 
           <div className="flex flex-col-reverse md:flex-row items-center lg:justify-between mb-5">
@@ -119,34 +116,13 @@ const TaskCard = ({
               setEditing={setEditTitle}
             />
 
-            <div className="flex ml-auto">
-              <Button
-                id="dots-task"
-                onClick={moreOptions}
-                color={
-                  !task?.isFavorite
-                    ? ButtonColorVariants.white
-                    : ButtonColorVariants.primary
-                }
-                disabled={disabledCard}
-                icon
-              >
-                <DotsHorizontalIcon />
-              </Button>
-              <Button
-                id="check-task"
-                onClick={markAsDone}
-                color={
-                  !task?.isFavorite
-                    ? ButtonColorVariants.white
-                    : ButtonColorVariants.primary
-                }
-                disabled={selected || loading}
-                icon
-              >
-                <CheckSquareIcon checked={task?.completed} />
-              </Button>
-            </div>
+            <TaskCardOptions
+              task={task}
+              selected={selected}
+              loading={loading}
+              onSelect={onSelect}
+              handleUpdate={handleUpdate}
+            />
           </div>
           <DescriptionEditable
             task={task}

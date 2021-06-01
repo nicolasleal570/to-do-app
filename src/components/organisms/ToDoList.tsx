@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { StickyContainer, Sticky } from 'react-sticky';
+import classNames from 'classnames';
 import Button from '../atoms/Button';
 import ButtonColorVariants from '../../types/enums/ButtonColorVariants';
 import EmptyTasksList from '../molecules/EmptyTasksList';
@@ -22,6 +23,11 @@ interface ToDoListProps {
     taskIds: string[],
     addToFavorites?: boolean
   ) => Promise<void>;
+  markManyTasksAsDone: (
+    taskIds: string[],
+    addToFavorites?: boolean
+  ) => Promise<void>;
+
   onCreateFirstTask: () => void;
 }
 
@@ -34,6 +40,7 @@ export default function ToDoList({
   deleteTask,
   deleteManyTasks,
   addManyTasksToFavorites,
+  markManyTasksAsDone,
   onCreateFirstTask,
 }: ToDoListProps) {
   const [tasksSelected, setTasksSelected] = React.useState<boolean[]>([]);
@@ -43,7 +50,13 @@ export default function ToDoList({
   const toggleCompletedTaskList = () => setShowCompletedTasks((prev) => !prev);
 
   const onSelectAllTasks = () => {
-    setTasksSelected((prev) => [...prev.map((_) => true)]);
+    setTasksSelected((prev) => [...prev.map((_, idx) => tasks[idx] && true)]);
+  };
+
+  const setSelectedTask = (idx: number) => (value: boolean) => {
+    const arr: boolean[] = [...tasksSelected];
+    arr[idx] = value;
+    setTasksSelected(arr);
   };
 
   const onDeselectAllTasks = () => {
@@ -61,14 +74,18 @@ export default function ToDoList({
   }, [tasks, tasksSelected]);
 
   const someTasksAreSelected = tasksSelected?.some((value) => value === true);
-  const totalItems = tasks?.length + completedTasks?.length;
 
   return (
     <>
       <StickyContainer>
         <Sticky topOffset={80}>
           {({ style, isSticky }) => (
-            <div style={style} className="w-full md:w-card mx-auto z-40">
+            <div
+              style={style}
+              className={classNames('w-full z-40 px-4 md:px-0', {
+                'bg-darkNavbar md:rounded-b-lg': isSticky,
+              })}
+            >
               {!showEmptyState && (
                 <ToolsBar
                   tasksLoading={tasksLoading}
@@ -78,6 +95,7 @@ export default function ToDoList({
                   tasksSelected={tasksSelected}
                   deleteManyTasks={deleteManyTasks}
                   addManyTasksToFavorites={addManyTasksToFavorites}
+                  markManyTasksAsDone={markManyTasksAsDone}
                 />
               )}
             </div>
@@ -96,7 +114,7 @@ export default function ToDoList({
                     disabled={tasksLoading}
                     linkButton
                   >
-                    Clear Selection ({totalItems})
+                    Clear Selection ({tasks?.length})
                   </Button>
                 ) : (
                   tasks?.length > 0 && (
@@ -107,7 +125,7 @@ export default function ToDoList({
                       disabled={tasksLoading}
                       linkButton
                     >
-                      Select All ({totalItems})
+                      Select All ({tasks?.length})
                     </Button>
                   )
                 )}
@@ -135,11 +153,7 @@ export default function ToDoList({
                       key={task?.id}
                       task={task}
                       selected={tasksSelected[idx]}
-                      setSelected={(value) => {
-                        const arr: boolean[] = [...tasksSelected];
-                        arr[idx] = value;
-                        setTasksSelected(arr);
-                      }}
+                      setSelected={setSelectedTask(idx)}
                       onUpdateTask={updateTask}
                       onDeleteTask={deleteTask}
                     />
@@ -164,7 +178,7 @@ export default function ToDoList({
               </div>
 
               {showCompletedTasks &&
-                completedTasks?.map((task, idx) => (
+                completedTasks?.map((task) => (
                   <motion.div
                     className="mt-10"
                     key={`completed-${task?.id}`}
@@ -184,12 +198,7 @@ export default function ToDoList({
                     <TaskCard
                       key={task?.id}
                       task={task}
-                      selected={tasksSelected[idx]}
-                      setSelected={(value) => {
-                        const arr: boolean[] = [...tasksSelected];
-                        arr[idx] = value;
-                        setTasksSelected(arr);
-                      }}
+                      selected={false}
                       onUpdateTask={updateTask}
                       onDeleteTask={deleteTask}
                     />
@@ -198,7 +207,12 @@ export default function ToDoList({
             </div>
           </>
         ) : (
-          <EmptyTasksList onClick={onCreateFirstTask} />
+          <EmptyTasksList
+            onClick={onCreateFirstTask}
+            everythingIsCompleted={
+              completedTasks?.length > 0 && tasks?.length === 0
+            }
+          />
         )}
       </StickyContainer>
     </>

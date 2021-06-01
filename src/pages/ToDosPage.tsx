@@ -22,6 +22,7 @@ export default function ToDosPage() {
     deleteTask,
     deleteManyTasks,
     addManyTasksToFavorites,
+    markManyTasksAsDone,
   } = useTask();
   const [tasks, setTasks] = React.useState<Task[]>([]);
   const [completedTasks, setCompletedTasks] = React.useState<Task[]>([]);
@@ -105,6 +106,7 @@ export default function ToDosPage() {
           deleteTask={deleteTask}
           deleteManyTasks={deleteManyTasks}
           addManyTasksToFavorites={addManyTasksToFavorites}
+          markManyTasksAsDone={markManyTasksAsDone}
           onCreateFirstTask={onCreateFirstTask}
         />
       </Wrapper>
