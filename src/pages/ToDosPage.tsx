@@ -40,7 +40,7 @@ export default function ToDosPage() {
     initialState: {
       title: '',
       description: '',
-      isFavorite: false,
+      isFavorite: query?.get('action') === 'create-task-from-favorites',
       completed: false,
       createdAt: date,
       updatedAt: date,

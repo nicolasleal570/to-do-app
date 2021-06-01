@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import Button from './Button';
 import ButtonColorVariants from '../../types/enums/ButtonColorVariants';
 import Task from '../../types/Task';
@@ -10,6 +11,7 @@ import ButtonSizeVariants from '../../types/enums/ButtonSizeVariants';
 interface ToolsBarProps {
   tasksLoading: boolean;
   someTasksAreSelected: boolean;
+  isSticky: boolean;
   tasks: Task[];
   tasksSelected: boolean[];
   deleteManyTasks: (taskIds: string[]) => Promise<void>;
@@ -22,6 +24,7 @@ interface ToolsBarProps {
 export default function ToolsBar({
   tasksLoading,
   someTasksAreSelected,
+  isSticky,
   tasks,
   tasksSelected,
   deleteManyTasks,
@@ -54,7 +57,15 @@ export default function ToolsBar({
     };
 
   return someTasksAreSelected ? (
-    <div className="grid grid-cols-2 md:grid-cols-8 gap-2 md:gap-4 w-full md:w-card mx-auto p-2 md:p-4 mt-4 mb-5 overflow-hidden bg-white rounded">
+    <div
+      className={classNames(
+        'grid grid-cols-2 md:grid-cols-8 gap-2 md:gap-4 w-full md:w-card mx-auto p-2 md:p-4 mt-4 mb-5 overflow-hidden  rounded',
+        {
+          'bg-white': !isSticky,
+          'bg-darkNavbar': isSticky,
+        }
+      )}
+    >
       <Button
         id="delete-selection-btn"
         onClick={onDeleteSelectedTasks}

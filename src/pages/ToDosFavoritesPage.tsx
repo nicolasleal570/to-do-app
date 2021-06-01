@@ -18,6 +18,7 @@ export default function ToDosFavoritesPage() {
     addManyTasksToFavorites,
   } = useTask();
   const [tasks, setTasks] = React.useState<Task[]>([]);
+  const [completedTasks, setCompletedTasks] = React.useState<Task[]>([]);
 
   const [hideCreateTaskForm, setHideCreateTaskForm] = React.useState(false);
 
@@ -29,19 +30,21 @@ export default function ToDosFavoritesPage() {
   };
 
   React.useEffect(() => {
-    const sortedArr = []
-      .concat(_tasks)
-      .sort((a, b) => {
-        if (a?.completed === b?.completed) {
-          return 0;
+    const completed = [];
+    const notCompleted = [];
+    [].concat(_tasks).forEach((task) => {
+      if (task?.isFavorite) {
+        if (task?.completed) {
+          completed?.push(task);
+        } else {
+          notCompleted.push(task);
         }
+      }
+    });
 
-        return a?.completed ? 1 : -1;
-      })
-      .filter((items) => items?.isFavorite);
-
-    setTasks(sortedArr);
-  }, [_tasks]);
+    setTasks(notCompleted);
+    setCompletedTasks(completed);
+  }, [_tasks, tasksLoading]);
 
   React.useEffect(() => {
     if (!tasksLoading) {
@@ -59,9 +62,9 @@ export default function ToDosFavoritesPage() {
       <Wrapper>
         <ToDoList
           tasks={tasks}
-          completedTasks={[]}
+          completedTasks={completedTasks}
           tasksLoading={hideCreateTaskForm}
-          showEmptyState={!tasks?.length}
+          showEmptyState={!tasks?.length && !completedTasks?.length}
           updateTask={updateTask}
           deleteTask={deleteTask}
           deleteManyTasks={deleteManyTasks}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { StickyContainer, Sticky } from 'react-sticky';
 import Button from '../atoms/Button';
 import ButtonColorVariants from '../../types/enums/ButtonColorVariants';
 import EmptyTasksList from '../molecules/EmptyTasksList';
@@ -60,136 +61,146 @@ export default function ToDoList({
   }, [tasks, tasksSelected]);
 
   const someTasksAreSelected = tasksSelected?.some((value) => value === true);
-
-  console.log({ completedTasks });
+  const totalItems = tasks?.length + completedTasks?.length;
 
   return (
     <>
-      {!showEmptyState ? (
-        <>
-          <ToolsBar
-            tasksLoading={tasksLoading}
-            someTasksAreSelected={someTasksAreSelected}
-            tasks={tasks}
-            tasksSelected={tasksSelected}
-            deleteManyTasks={deleteManyTasks}
-            addManyTasksToFavorites={addManyTasksToFavorites}
-          />
+      <StickyContainer>
+        <Sticky topOffset={80}>
+          {({ style, isSticky }) => (
+            <div style={style} className="w-full md:w-card mx-auto z-40">
+              {!showEmptyState && (
+                <ToolsBar
+                  tasksLoading={tasksLoading}
+                  someTasksAreSelected={someTasksAreSelected}
+                  isSticky={isSticky}
+                  tasks={tasks}
+                  tasksSelected={tasksSelected}
+                  deleteManyTasks={deleteManyTasks}
+                  addManyTasksToFavorites={addManyTasksToFavorites}
+                />
+              )}
+            </div>
+          )}
+        </Sticky>
 
-          <div className="w-full md:w-card mx-auto mt-16 overflow-hidden pb-12">
-            <div className="mb-5">
-              {someTasksAreSelected ? (
-                <Button
-                  id="delete-selection-btn"
-                  onClick={onDeselectAllTasks}
-                  color={ButtonColorVariants.white}
-                  disabled={tasksLoading}
-                  linkButton
-                >
-                  Clear Selection
-                </Button>
-              ) : (
-                tasks?.length > 0 && (
+        {!showEmptyState ? (
+          <>
+            <div className="w-full md:w-card mx-auto mt-16 overflow-hidden pb-12">
+              <div className="mb-5">
+                {someTasksAreSelected ? (
                   <Button
                     id="delete-selection-btn"
-                    onClick={onSelectAllTasks}
+                    onClick={onDeselectAllTasks}
                     color={ButtonColorVariants.white}
                     disabled={tasksLoading}
                     linkButton
                   >
-                    Select All
+                    Clear Selection ({totalItems})
                   </Button>
-                )
-              )}
-            </div>
+                ) : (
+                  tasks?.length > 0 && (
+                    <Button
+                      id="delete-selection-btn"
+                      onClick={onSelectAllTasks}
+                      color={ButtonColorVariants.white}
+                      disabled={tasksLoading}
+                      linkButton
+                    >
+                      Select All ({totalItems})
+                    </Button>
+                  )
+                )}
+              </div>
 
-            <AnimatePresence initial={false}>
-              {tasks?.map((task, idx) => (
-                <motion.div
-                  className="mb-10"
-                  key={task?.id}
-                  initial={{
-                    opacity: 0,
-                    scale: 0.6,
-                    y: -100,
-                  }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{
-                    opacity: 0,
-                    scale: 0,
-                    y: 50,
-                    transition: { duration: 0.4 },
-                  }}
-                >
-                  <TaskCard
+              <AnimatePresence initial={false}>
+                {tasks?.map((task, idx) => (
+                  <motion.div
+                    className="mb-10"
                     key={task?.id}
-                    task={task}
-                    selected={tasksSelected[idx]}
-                    setSelected={(value) => {
-                      const arr: boolean[] = [...tasksSelected];
-                      arr[idx] = value;
-                      setTasksSelected(arr);
+                    initial={{
+                      opacity: 0,
+                      scale: 0.6,
+                      y: -100,
                     }}
-                    onUpdateTask={updateTask}
-                    onDeleteTask={deleteTask}
-                  />
-                </motion.div>
-              ))}
-            </AnimatePresence>
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{
+                      opacity: 0,
+                      scale: 0,
+                      y: 50,
+                      transition: { duration: 0.4 },
+                    }}
+                  >
+                    <TaskCard
+                      key={task?.id}
+                      task={task}
+                      selected={tasksSelected[idx]}
+                      setSelected={(value) => {
+                        const arr: boolean[] = [...tasksSelected];
+                        arr[idx] = value;
+                        setTasksSelected(arr);
+                      }}
+                      onUpdateTask={updateTask}
+                      onDeleteTask={deleteTask}
+                    />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
 
-            <div className="flex items-center justify-center">
-              <div className="flex-1" />
-              <button
-                type="button"
-                className="text-secondary flex items-center outline-none focus:outline-none"
-                onClick={toggleCompletedTaskList}
-              >
-                <span className="mr-2">
-                  {showCompletedTasks ? 'Hide' : 'Show'} completed tasks (
-                  {completedTasks?.length})
-                </span>
-                {showCompletedTasks ? <ArrowUpIcon /> : <ArrowDownIcon />}
-              </button>
-              <div className="flex-1" />
-            </div>
-
-            {showCompletedTasks &&
-              completedTasks?.map((task, idx) => (
-                <motion.div
-                  className="mt-10"
-                  key={`completed-${task?.id}`}
-                  initial={{
-                    opacity: 0,
-                    scale: 0.6,
-                    y: -100,
-                  }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{
-                    opacity: 0,
-                    scale: 0,
-                    y: 50,
-                    transition: { duration: 0.4 },
-                  }}
+              <div className="flex items-center justify-center">
+                <div className="flex-1" />
+                <button
+                  type="button"
+                  className="text-secondary flex items-center outline-none focus:outline-none"
+                  onClick={toggleCompletedTaskList}
                 >
-                  <TaskCard
-                    key={task?.id}
-                    task={task}
-                    selected={tasksSelected[idx]}
-                    setSelected={(value) => {
-                      const arr: boolean[] = [...tasksSelected];
-                      arr[idx] = value;
-                      setTasksSelected(arr);
+                  <span className="mr-2">
+                    {showCompletedTasks ? 'Hide' : 'Show'} completed tasks (
+                    {completedTasks?.length})
+                  </span>
+                  {showCompletedTasks ? <ArrowUpIcon /> : <ArrowDownIcon />}
+                </button>
+                <div className="flex-1" />
+              </div>
+
+              {showCompletedTasks &&
+                completedTasks?.map((task, idx) => (
+                  <motion.div
+                    className="mt-10"
+                    key={`completed-${task?.id}`}
+                    initial={{
+                      opacity: 0,
+                      scale: 0.6,
+                      y: -100,
                     }}
-                    onUpdateTask={updateTask}
-                    onDeleteTask={deleteTask}
-                  />
-                </motion.div>
-              ))}
-          </div>
-        </>
-      ) : (
-        <EmptyTasksList onClick={onCreateFirstTask} />
-      )}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{
+                      opacity: 0,
+                      scale: 0,
+                      y: 50,
+                      transition: { duration: 0.4 },
+                    }}
+                  >
+                    <TaskCard
+                      key={task?.id}
+                      task={task}
+                      selected={tasksSelected[idx]}
+                      setSelected={(value) => {
+                        const arr: boolean[] = [...tasksSelected];
+                        arr[idx] = value;
+                        setTasksSelected(arr);
+                      }}
+                      onUpdateTask={updateTask}
+                      onDeleteTask={deleteTask}
+                    />
+                  </motion.div>
+                ))}
+            </div>
+          </>
+        ) : (
+          <EmptyTasksList onClick={onCreateFirstTask} />
+        )}
+      </StickyContainer>
     </>
   );
 }
