@@ -21,12 +21,15 @@ Esta es una simple apliación donde puedes escribir tus tareas con un título, u
 - **TailwindCSS** y **PostCSS**, framework para la UI.
 - **Framer Motion** para las animaciones y micro-interacciones.
 - **Jest** y **Testing Library** para testear componentes y funciones.
-- **STorybooks** para documentación de componentes (Sigue en desarrollo 😁)
+- **Storybooks** para documentación de componentes (Sigue en desarrollo 😁)
 - **Netlify** como servicio de hosting y dominio. 
+- **Figma** para el diseño del sitio 
 
 ## Ejecutar el proyecto
 
 Puedes visitar el entorno de producción visitando [Link](https://60b62a353433a9000989aec7--loving-mccarthy-8a9fd9.netlify.app/)
+
+Además, se puede revisar el diseño de la app visitando Figa: [Link](https://www.figma.com/file/1MwmIL6B6VWmDDePOh71f7/to-do-app?node-id=0%3A1)
 
 Pero si se quiere ejecuta el entorno de desarrollo, primero debes descargarlo utilizando git: 
 
