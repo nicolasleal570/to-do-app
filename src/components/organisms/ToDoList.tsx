@@ -78,15 +78,17 @@ export default function ToDoList({
                   Clear Selection
                 </Button>
               ) : (
-                <Button
-                  id="delete-selection-btn"
-                  onClick={onSelectAllTasks}
-                  color={ButtonColorVariants.white}
-                  disabled={tasksLoading}
-                  linkButton
-                >
-                  Select All
-                </Button>
+                tasks?.length > 0 && (
+                  <Button
+                    id="delete-selection-btn"
+                    onClick={onSelectAllTasks}
+                    color={ButtonColorVariants.white}
+                    disabled={tasksLoading}
+                    linkButton
+                  >
+                    Select All
+                  </Button>
+                )
               )}
             </div>
 

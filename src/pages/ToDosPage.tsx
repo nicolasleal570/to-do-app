@@ -26,7 +26,7 @@ export default function ToDosPage() {
   const [tasks, setTasks] = React.useState<Task[]>([]);
 
   const handleSubmit = async (data: Task) => {
-    if (tasks?.length === 0) {
+    if (query?.get('action')) {
       history.push('/to-do');
     }
 
