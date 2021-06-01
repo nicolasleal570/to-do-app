@@ -23,8 +23,6 @@ export default function useTask(): UseTaskReturnType {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(userLoading);
 
-  console.log({ tasks, loading, userLoading });
-
   const updateTasksOnUser = async (_tasks: Task[]) => {
     if (userLoading) return;
 

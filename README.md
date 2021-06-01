@@ -1,46 +1,44 @@
-# Getting Started with Create React App
+﻿# Bienvenido a To-Do App!
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Esta es una simple apliación donde puedes escribir tus tareas con un título, una breve descripción y además agregarlas o eliminarlas de tus favoritos.
 
-## Available Scripts
+## Funcionalidades Principales
 
-In the project directory, you can run:
+ - Swipe hacia la izquierda para facilitar el agregar/eliminar de favoritos una tarea.
+ - Swipe hacia la derecha para facilitar la opción de eliminar una tarea.
+ - Selección multiple que te permite: 
+	 - Eliminar tareas en grupo.
+	 - Agregar/eliminar de los favoritos tareas en grupo.
+- Marcar como terminada una tarea.
+- Responsive design.
+- Rutas protegidas.
+- Micro-interacciones y animaciones.
 
-### `yarn start`
+## Tecnologías y Librerías Principales
+- **React** para el front-end.
+- **Typescript** para un tipado estricto. 
+- **ESLint** y **Prettier** para darle el formato correcto al código. 
+- **TailwindCSS** y **PostCSS**, framework para la UI.
+- **Framer Motion** para las animaciones y micro-interacciones.
+- **Jest** y **Testing Library** para testear componentes y funciones.
+- **Storybooks** para documentar los componentes el proyecto.
+- **Heroku** para desplegar el entorno de producción. 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Ejecutar el proyecto
+Puedes visitar el entorno de producción visitando: [Link](https://organize-your-life.herokuapp.com)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Si se quiere ejecuta el proyecto en local basta con descargarlo utilizando git: 
 
-### `yarn test`
+    git clone https://github.com/nicolasleal570/to-do-app.git
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Y utilizando **yarn** debes instalar las librerías: 
 
-### `yarn build`
+    yarn install
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Ahora, ya estás listo para ejecutar el entorno de desarrollo del proyecto en tu computadora: 
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+    yarn start
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Esto deberá abrir el puerto **:5000** y postrar la aplicación.
 
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+ 

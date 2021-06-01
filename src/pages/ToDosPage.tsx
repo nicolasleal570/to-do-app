@@ -24,6 +24,7 @@ export default function ToDosPage() {
     addManyTasksToFavorites,
   } = useTask();
   const [tasks, setTasks] = React.useState<Task[]>([]);
+  const [completedTasks, setCompletedTasks] = React.useState<Task[]>([]);
 
   const handleSubmit = async (data: Task) => {
     if (query?.get('action')) {
@@ -39,7 +40,7 @@ export default function ToDosPage() {
     initialState: {
       title: '',
       description: '',
-      isFavorite: false,
+      isFavorite: query?.get('action') === 'create-task-from-favorites',
       completed: false,
       createdAt: date,
       updatedAt: date,
@@ -54,16 +55,21 @@ export default function ToDosPage() {
   const onCreateFirstTask = () => setHideCreateTaskForm(false);
 
   React.useEffect(() => {
-    const sortedArr = [].concat(_tasks).sort((a, b) => {
-      if (a?.completed === b?.completed) {
-        return 0;
-      }
+    if (!tasksLoading) {
+      const completed = [];
+      const notCompleted = [];
+      [].concat(_tasks).forEach((task) => {
+        if (task?.completed) {
+          completed.push(task);
+        } else {
+          notCompleted.push(task);
+        }
+      });
 
-      return a?.completed ? 1 : -1;
-    });
-
-    setTasks(sortedArr);
-  }, [_tasks]);
+      setTasks(notCompleted);
+      setCompletedTasks(completed);
+    }
+  }, [_tasks, tasksLoading]);
 
   React.useEffect(() => {
     if (!tasksLoading && !query?.get('action')) {
@@ -92,6 +98,7 @@ export default function ToDosPage() {
 
         <ToDoList
           tasks={tasks}
+          completedTasks={completedTasks}
           tasksLoading={tasksLoading}
           showEmptyState={hideCreateTaskForm}
           updateTask={updateTask}
