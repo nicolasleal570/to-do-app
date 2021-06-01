@@ -14,7 +14,7 @@ import TaskCardOptions from './TaskCardOptions';
 interface TaskCardProps {
   task: Task;
   selected: boolean;
-  setSelected: (selected: boolean) => void;
+  setSelected?: (selected: boolean) => void;
   onUpdateTask: (newTask: Task) => Promise<Task>;
   onDeleteTask: (taskId: string) => Promise<void>;
 }
@@ -42,6 +42,8 @@ const TaskCard = ({
     handleUpdate({ ...task, isFavorite: !task?.isFavorite });
 
   const onSelect = () => {
+    if (!setSelected) return;
+
     if (!loading && !task?.completed) {
       setSelected(!selected);
     }
