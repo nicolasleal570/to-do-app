@@ -21,10 +21,14 @@ Esta es una simple apliación donde puedes escribir tus tareas con un título, u
 - **TailwindCSS** y **PostCSS**, framework para la UI.
 - **Framer Motion** para las animaciones y micro-interacciones.
 - **Jest** y **Testing Library** para testear componentes y funciones.
+- **STorybooks** para documentación de componentes (Sigue en desarrollo 😁)
+- **Netlify** como servicio de hosting y dominio. 
 
 ## Ejecutar el proyecto
 
-Si se quiere ejecuta el entorno de desarrollo del proyecto en tu computadora, primero debes descargarlo utilizando git: 
+Puedes visitar el entorno de producción visitando [Link](https://60b62642df5b8c00072e39ad--loving-mccarthy-8a9fd9.netlify.app/)
+
+Pero si se quiere ejecuta el entorno de desarrollo, primero debes descargarlo utilizando git: 
 
     git clone https://github.com/nicolasleal570/to-do-app.git
 
@@ -38,4 +42,9 @@ Ahora, ya estás listo para ejecutar el entorno de desarrollo del proyecto en tu
 
 Esto deberá abrir el puerto **:3000** y mostrar la aplicación.
 
- 
+## Otros comandos
+- **yarn test** para ejecutar la suite de tests
+- **yarn test-all** para ejecutar prettier, eslint y además la suite de tests
+- **yarn build** para compilar el proyecto 
+- - **yarn storybook** para ver la documentación del proyecto
+
