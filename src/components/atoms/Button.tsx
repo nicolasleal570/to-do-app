@@ -75,7 +75,7 @@ export default function Button({
             'opacity-100 cursor-pointer': !disabled,
             'opacity-50 cursor-not-allowed': disabled,
             'p-2.5 rounded text-base': size === ButtonSizeVariants.normal,
-            'p-1 rounded': size === ButtonSizeVariants.small,
+            'p-1 w-8 h-8 rounded': size === ButtonSizeVariants.small,
             'bg-primary text-white': color === ButtonColorVariants.primary,
             'bg-secondary text-dark': color === ButtonColorVariants.secondary,
             'bg-dark text-white': color === ButtonColorVariants.dark,

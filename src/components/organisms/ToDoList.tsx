@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { StickyContainer, Sticky } from 'react-sticky';
+import classNames from 'classnames';
 import Button from '../atoms/Button';
 import ButtonColorVariants from '../../types/enums/ButtonColorVariants';
 import EmptyTasksList from '../molecules/EmptyTasksList';
@@ -68,7 +69,12 @@ export default function ToDoList({
       <StickyContainer>
         <Sticky topOffset={80}>
           {({ style, isSticky }) => (
-            <div style={style} className="w-full md:w-card mx-auto z-40">
+            <div
+              style={style}
+              className={classNames('w-full z-40 px-4 md:px-0', {
+                'bg-darkNavbar md:rounded-b-lg': isSticky,
+              })}
+            >
               {!showEmptyState && (
                 <ToolsBar
                   tasksLoading={tasksLoading}

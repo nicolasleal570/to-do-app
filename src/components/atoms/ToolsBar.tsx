@@ -59,7 +59,7 @@ export default function ToolsBar({
   return someTasksAreSelected ? (
     <div
       className={classNames(
-        'grid grid-cols-2 md:grid-cols-8 gap-2 md:gap-4 w-full md:w-card mx-auto p-2 md:p-4 mt-4 mb-5 overflow-hidden  rounded',
+        'grid grid-cols-6 md:grid-cols-8 gap-2 md:gap-4 w-full md:w-card mx-auto p-2 md:p-4 mt-4 mb-5 overflow-hidden  rounded',
         {
           'bg-white': !isSticky,
           'bg-darkNavbar': isSticky,
@@ -80,12 +80,16 @@ export default function ToolsBar({
       >
         <TrashIcon />
       </Button>
-      <div className="block md:hidden p-1" />
       <Button
         id="remove-selection-favorites-btn"
         onClick={onAddSelectedTasksToFavorites(false)}
         color={ButtonColorVariants.white}
         disabled={tasksLoading}
+        size={
+          viewport !== UseViewportSizeVariants.sm
+            ? ButtonSizeVariants.normal
+            : ButtonSizeVariants.small
+        }
         icon
         borders
       >
@@ -97,6 +101,11 @@ export default function ToolsBar({
         onClick={onAddSelectedTasksToFavorites(true)}
         color={ButtonColorVariants.white}
         disabled={tasksLoading}
+        size={
+          viewport !== UseViewportSizeVariants.sm
+            ? ButtonSizeVariants.normal
+            : ButtonSizeVariants.small
+        }
         icon
         borders
       >
