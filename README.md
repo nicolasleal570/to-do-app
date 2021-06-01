@@ -29,7 +29,7 @@ Esta es una simple apliación donde puedes escribir tus tareas con un título, u
 
 Puedes visitar el entorno de producción visitando [Link](https://60b62a353433a9000989aec7--loving-mccarthy-8a9fd9.netlify.app/)
 
-Además, se puede revisar el diseño de la app visitando Figa: [Link](https://www.figma.com/file/1MwmIL6B6VWmDDePOh71f7/to-do-app?node-id=0%3A1)
+Además, se puede revisar el diseño de la app visitando Figma: [Link](https://www.figma.com/file/1MwmIL6B6VWmDDePOh71f7/to-do-app?node-id=0%3A1)
 
 Pero si se quiere ejecuta el entorno de desarrollo, primero debes descargarlo utilizando git: 
 
