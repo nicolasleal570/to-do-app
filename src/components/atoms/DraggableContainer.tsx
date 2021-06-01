@@ -32,7 +32,7 @@ export default function DraggableContainer({
       viewport === UseViewportSizeVariants.lg ||
       viewport === UseViewportSizeVariants.xl
         ? 100
-        : 450;
+        : 200;
 
     if (info?.offset?.x > offset) {
       setDirection('right');
@@ -75,7 +75,7 @@ export default function DraggableContainer({
         dragElastic={
           viewport === UseViewportSizeVariants.sm ||
           viewport === UseViewportSizeVariants.md
-            ? 0.1
+            ? 0.35
             : 0.5
         }
         dragConstraints={{ left: 0, right: 0 }}
@@ -92,11 +92,11 @@ export default function DraggableContainer({
           'flex items-center justify-between  absolute w-full h-full top-0 left-0 z-0 rounded'
         )}
       >
-        <div className="flex-1 bg-danger text-white w-full h-full p-11 flex items-center justify-start rounded-l">
+        <div className="flex-1 bg-danger text-white w-full h-full px-4 lg:px-11 flex items-center justify-start rounded-l">
           <TrashIcon width="48" height="48" strokeWidth="1" />
         </div>
 
-        <div className="flex-1 bg-info text-dark w-full h-full p-11 flex items-center justify-end rounded-r">
+        <div className="flex-1 bg-info text-dark w-full h-full px-4 lg:px-11 flex items-center justify-end rounded-r">
           <HeartIcon
             width="48"
             height="48"
