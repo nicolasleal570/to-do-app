@@ -21,17 +21,14 @@ Esta es una simple apliación donde puedes escribir tus tareas con un título, u
 - **TailwindCSS** y **PostCSS**, framework para la UI.
 - **Framer Motion** para las animaciones y micro-interacciones.
 - **Jest** y **Testing Library** para testear componentes y funciones.
-- **Storybooks** para documentar los componentes el proyecto.
-- **Heroku** para desplegar el entorno de producción. 
 
 ## Ejecutar el proyecto
-Puedes visitar el entorno de producción visitando: [Link](https://organize-your-life.herokuapp.com)
 
-Si se quiere ejecuta el proyecto en local basta con descargarlo utilizando git: 
+Si se quiere ejecuta el entorno de desarrollo del proyecto en tu computadora, primero debes descargarlo utilizando git: 
 
     git clone https://github.com/nicolasleal570/to-do-app.git
 
-Y utilizando **yarn** debes instalar las librerías: 
+Y con **yarn** debes instalar las librerías: 
 
     yarn install
 
@@ -39,6 +36,6 @@ Ahora, ya estás listo para ejecutar el entorno de desarrollo del proyecto en tu
 
     yarn start
 
-Esto deberá abrir el puerto **:5000** y postrar la aplicación.
+Esto deberá abrir el puerto **:3000** y mostrar la aplicación.
 
  
